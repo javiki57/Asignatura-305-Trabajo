@@ -1,3 +1,6 @@
+Gran agradecimiento a Galán por todo su trabajo, gran parte de este documento tiene su nombre.  
+DEBEIS visitar su Github [Sr.Galán](https://github.com/15Galan) y gozareis de conocimiento. No leas más y visítalo primero antes de seguir.
+
 # Manual de Git casero
 
 
