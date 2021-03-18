@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0F967AA9-391D-57D0-943E-CADF8918ED61" name="GRUPO_POR_ASIGNATURA">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:33:49 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Curso_Académico" id="CBBC2606-9A4D-9F78-7456-F0FC5D46E044">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:34:15 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Oferta" id="ACCCD96F-D71F-3BE0-529F-BAFE7F20E8B2">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:34:21 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Referencia" id="E5FD43B9-FE39-4A71-B478-8283790DEDFE">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:50:40 UTC</createdTime>
+<generatorID>5DBAF65A-893E-0299-10EB-43A38962B9CD</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<referedAttribute>9125FDE2-F760-65F7-AC02-A1C4629A30C1</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Id" id="039E1A00-E89B-A07A-660C-940B9E2EEBB5">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:50:48 UTC</createdTime>
+<generatorID>306A816A-DA75-00DD-6D6D-382228942696</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<referedAttribute>017517B8-2683-939A-7E1B-E815AB8C9ADD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="A0776A8D-57E4-2E02-8B9C-330C13143B7B" name="GRUPO_POR_ASIGNATURA PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:34:24 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>CBBC2606-9A4D-9F78-7456-F0FC5D46E044</attributeRef>
+<attributeRef>E5FD43B9-FE39-4A71-B478-8283790DEDFE</attributeRef>
+<attributeRef>039E1A00-E89B-A07A-660C-940B9E2EEBB5</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

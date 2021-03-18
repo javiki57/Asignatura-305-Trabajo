@@ -1,0 +1,151 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F1335414-6350-C308-0AE9-9838924CDDBF" name="ALUMNO">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>C03CFAAE-1BA9-2B53-DE75-B29A15A44DCC</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Id" id="FEBD489B-041C-BCBC-3D64-E661CD24BA23">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>928BFCFD-E28E-2FA8-FFFB-1F33E1C638EF</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="DNI" id="9079CB9C-A2A7-1BD9-9AAA-64B116C350BE">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>A3D9B369-A3E3-A6A9-30DF-9F19A6C4400B</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Nombre_Completo" id="5B0698D1-65AE-B9D8-2436-46BCD63467DF">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>021B6FAD-7F40-FBD1-F992-136CE92539F7</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Email_Institucional" id="0CD89B75-5AD1-7C4D-A331-F4BCF7B6C000">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>10F217AF-6524-12BE-5CB7-FB167993EEC9</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Email_personal" id="75F9D388-E57D-BEE0-B6E4-66248958F0D5">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>147911BC-CB89-DD4D-BDB0-84C3B4034CB5</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Telefono" id="6C99E887-3DD5-D19F-E14E-D6DE350CBF50">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>055D4D00-2AAE-3400-AAD8-F38913056F62</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Móvil" id="0C8C576B-7A8F-FB5A-6199-DA3837B28F2E">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>B1F7CFD9-CCA0-3A4E-E634-C0AB39D9C943</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F8270C73-EB0D-5E30-30B8-B3446E4395A2" name="ALUMNO PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>633ECE20-7F84-43EC-05E2-51851C1BEF3A</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>FEBD489B-041C-BCBC-3D64-E661CD24BA23</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="B5CE8622-8276-6946-741C-F3F6D8E9D4F2" name="Key_2">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>EB5A07AC-983C-8F12-C182-3FCCB84A5219</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>9079CB9C-A2A7-1BD9-9AAA-64B116C350BE</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,107 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B0FB7CF4-C32F-531F-EF9C-E93386411C3E" name="CENTRO">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>8B91C154-B79E-15B8-7033-273C324EE5A4</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Id" id="5B5C37FF-CA59-58C0-1443-06CA4387D3AF">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>33FC41FC-F72C-C263-E4BF-15725FF29524</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Nombre" id="0E7CE6BA-B26B-4565-1633-7442E60260E0">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>7343C92A-DEB7-EC5B-CBA5-43F7D9FD50F0</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Dirección" id="B674F63F-6EFA-D636-306D-A64238DB1739">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>EE9288FE-889B-2A76-3AEB-1E0340C4D287</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TLF_Conserjería" id="36011F81-B8B4-3590-77DA-EC8567DA3282">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>4D499624-8BFE-CC54-56FB-2ED4F74B5A0A</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="FE9FF36C-E36C-B3A5-A133-FB12357F4059" name="CENTRO PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>453DEBF1-BE33-4DB6-A774-A4342B9FB400</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>5B5C37FF-CA59-58C0-1443-06CA4387D3AF</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="D2D90F6C-EE14-799D-0CB5-48A3334C4C14" name="Key_2">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>A5CE24E8-1ACC-4D64-5416-59B6548F61C8</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>0E7CE6BA-B26B-4565-1633-7442E60260E0</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

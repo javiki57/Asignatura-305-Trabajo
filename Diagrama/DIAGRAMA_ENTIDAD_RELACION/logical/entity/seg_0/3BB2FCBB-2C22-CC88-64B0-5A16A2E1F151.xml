@@ -1,0 +1,69 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3BB2FCBB-2C22-CC88-64B0-5A16A2E1F151" name="TITULACIÓN">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:17:57 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Código" id="C1BC1B73-D632-851C-E528-DADE079D8B4E">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:18:27 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Nombre" id="924F46F5-D334-02F0-C11C-116CFCC4CBBF">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:18:34 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Créditos" id="CB76ECD9-C499-2317-61C3-DCDBCBC6A2ED">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:18:38 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="4CACE5B3-5F92-A446-97B7-E7643FBC3252" name="TITULACIÓN PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:19:17 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C1BC1B73-D632-851C-E528-DADE079D8B4E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

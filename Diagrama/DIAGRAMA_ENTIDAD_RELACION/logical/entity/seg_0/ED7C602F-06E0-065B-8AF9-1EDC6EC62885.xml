@@ -1,0 +1,59 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="ED7C602F-06E0-065B-8AF9-1EDC6EC62885" name="ENCUESTA">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:29:09 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Fecha_de_Envío" id="AC49FAAC-8113-AE4A-4E91-C800B6E51724">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:29:14 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Num_Expediente" id="D692643F-D0A2-3CDE-E3D7-8D13C2A43160">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:50:59 UTC</createdTime>
+<generatorID>ACBDB45A-64D4-58AB-2602-B111CADB4148</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<referedAttribute>68A3CEF5-5310-4409-F6D3-F54EBCC0D3BD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="7B83DAE0-0FC7-4525-135C-5040EF5B2173" name="ENCUESTA PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:29:28 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>AC49FAAC-8113-AE4A-4E91-C800B6E51724</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="59F518BA-3EDB-C794-B7B9-90BA4796E895" name="CLASE">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>3E578013-4FF0-F439-E0A1-91C5E3A7A52B</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Día" id="842C7551-9D04-0A87-C735-DB6EA863F3C6">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>D87A3B47-072F-9FD4-F4D0-970C719034E9</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Hora_Inicio" id="B8C7162D-BD2A-B30F-B799-E272FADF9EF5">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>E4971C4E-DCAE-B02E-2C3A-C2B774F0F51A</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Hora_Fin" id="45637AC7-5EDF-F660-B416-5679571C0CE3">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>6878BAF4-0C2D-2254-FC3D-A2C543228D3F</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Referencia" id="5D316F6A-DF13-972E-A95F-0C52C2DF8308">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<generatorID>525DAB33-4262-882C-30C1-E3BA3863ACFB</generatorID>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>D168F298-CE4D-DA6D-2D62-F81C38CBBDA2</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<referedAttribute>9D088F4E-09D7-B36C-828C-8F5B1BC36D03</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Id" id="6532B0BC-AA9D-67DB-1779-1A5A710F59FF">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<generatorID>C77A8525-EA20-4D5C-901E-1F5F437B78CE</generatorID>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>2A66E765-EB44-6538-313B-440A4BD6BDE3</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<referedAttribute>F5D9F8C0-C40E-4E1B-B697-3D2E338CC573</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="68B541B7-8864-C85C-52C8-4F17CB61F005" name="CLASE PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-18 10:39:31 UTC</createdTime>
+<ownerDesignName>Sin título_1</ownerDesignName>
+<importedID>7C293F93-BB2C-763F-FFE6-3A0008D4649E</importedID>
+<engineerTo>
+<item key="6FB15FC3-AC50-FBC2-8A25-4E11531FE8ED" value="true"/>
+<item key="1A44F245-7447-A733-6F64-80B8AC18B041" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>842C7551-9D04-0A87-C735-DB6EA863F3C6</attributeRef>
+<attributeRef>B8C7162D-BD2A-B30F-B799-E272FADF9EF5</attributeRef>
+<attributeRef>6532B0BC-AA9D-67DB-1779-1A5A710F59FF</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,100 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3E578013-4FF0-F439-E0A1-91C5E3A7A52B" name="CLASE">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:36:55 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Día" id="D87A3B47-072F-9FD4-F4D0-970C719034E9">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:37:06 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Hora_Inicio" id="E4971C4E-DCAE-B02E-2C3A-C2B774F0F51A">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:37:09 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Hora_Fin" id="6878BAF4-0C2D-2254-FC3D-A2C543228D3F">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:37:13 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Referencia" id="D168F298-CE4D-DA6D-2D62-F81C38CBBDA2">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:46:52 UTC</createdTime>
+<generatorID>7E5F5BB9-5ABD-5675-E534-171DCCCC4010</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<referedAttribute>9125FDE2-F760-65F7-AC02-A1C4629A30C1</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Id" id="2A66E765-EB44-6538-313B-440A4BD6BDE3">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:47:19 UTC</createdTime>
+<generatorID>B0A11DD2-F62B-4614-820F-9BA9FBE4BCCA</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<referedAttribute>017517B8-2683-939A-7E1B-E815AB8C9ADD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="7C293F93-BB2C-763F-FFE6-3A0008D4649E" name="CLASE PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-17 15:37:29 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="1CED7C76-65FE-3C2A-117C-901E3A4EED36" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D87A3B47-072F-9FD4-F4D0-970C719034E9</attributeRef>
+<attributeRef>E4971C4E-DCAE-B02E-2C3A-C2B774F0F51A</attributeRef>
+<attributeRef>2A66E765-EB44-6538-313B-440A4BD6BDE3</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
