@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4E688BA7-6C7E-D9CB-1E8B-3D8A54CDE1AC" name="CLASE">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>3E578013-4FF0-F439-E0A1-91C5E3A7A52B</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Día" id="D80391B7-480F-F01D-8F22-FB07F263DA89">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>D87A3B47-072F-9FD4-F4D0-970C719034E9</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Hora_Inicio" id="90C76897-AAC4-9921-5F0B-72BF1970B372">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>E4971C4E-DCAE-B02E-2C3A-C2B774F0F51A</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Hora_Fin" id="3D6CC690-1B30-3FF6-D562-00BEDF5E1CF3">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>6878BAF4-0C2D-2254-FC3D-A2C543228D3F</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Referencia" id="6A4BEA79-B59E-8069-F272-94281165B45E">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<generatorID>98DA9648-0E2B-EF73-9237-803F3E677ADF</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>D168F298-CE4D-DA6D-2D62-F81C38CBBDA2</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<referedAttribute>54C8B713-81A3-0654-5CF9-21347CECEE08</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Id" id="BE9F2611-FB0B-984C-90F6-E02C67235837">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<generatorID>0EDA726E-35DB-8A57-3E8F-604C7887F59C</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>2A66E765-EB44-6538-313B-440A4BD6BDE3</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<referedAttribute>FDA05A3F-CEA7-2A38-E937-02C3AF221276</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9C653DBA-9BDE-26B3-7523-3C532BF477AF" name="CLASE PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>7C293F93-BB2C-763F-FFE6-3A0008D4649E</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D80391B7-480F-F01D-8F22-FB07F263DA89</attributeRef>
+<attributeRef>90C76897-AAC4-9921-5F0B-72BF1970B372</attributeRef>
+<attributeRef>BE9F2611-FB0B-984C-90F6-E02C67235837</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

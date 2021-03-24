@@ -1,0 +1,79 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C64817FE-02EF-8007-4938-70B18692DDED" name="TITULACIÓN">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>3BB2FCBB-2C22-CC88-64B0-5A16A2E1F151</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Código" id="53236E4F-A96F-EAC3-CEA2-FE4A8B9DD887">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>C1BC1B73-D632-851C-E528-DADE079D8B4E</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Nombre" id="A168F03B-4819-C3F7-A974-966842DFA2D5">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>924F46F5-D334-02F0-C11C-116CFCC4CBBF</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Créditos" id="0A971931-7094-EC11-0408-61ED0779E15E">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>CB76ECD9-C499-2317-61C3-DCDBCBC6A2ED</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F536CE52-B8BC-9634-95B0-08F6E810DF54" name="TITULACIÓN PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>4CACE5B3-5F92-A446-97B7-E7643FBC3252</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>53236E4F-A96F-EAC3-CEA2-FE4A8B9DD887</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,52 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="718EC54E-536B-27FE-1E7E-B064160DC588" name="OP">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>8B2E4E40-099B-53CA-4191-B7A332D67C84</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>A9BC547B-0088-E570-7292-24B69D5A86F1</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Plazas" id="5C4A91EE-DB29-A6CC-4F41-DC7F928EF72D">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>4902F109-F28C-312E-6A2C-0946A138E74D</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Mención" id="E6CBBC97-DD4A-F2C3-21AB-BDAFBDEFA416">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:07:07 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<importedID>E4D15F87-5EDB-347A-869F-FEA415731B3A</importedID>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

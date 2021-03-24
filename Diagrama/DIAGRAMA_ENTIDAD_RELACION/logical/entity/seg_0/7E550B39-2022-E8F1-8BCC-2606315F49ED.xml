@@ -1,0 +1,98 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="7E550B39-2022-E8F1-8BCC-2606315F49ED" name="Asignatura_Matricula">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:41:35 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Referencia" id="4080321A-57AB-E663-640C-EA42C83AFDB3">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:48:31 UTC</createdTime>
+<generatorID>5CD7AFE4-9A88-0B37-A763-17D25E558FA0</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<referedAttribute>54C8B713-81A3-0654-5CF9-21347CECEE08</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Curso_Académico" id="53C769A9-A57F-0F49-3C6C-38646F8C9324">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:48:52 UTC</createdTime>
+<generatorID>12A6F11A-C6FF-656A-2C0C-89D6B2D98692</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<referedAttribute>00339746-7845-A696-E90F-B4B4F4C3258C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Num_Expediente" id="D633C70F-4A59-DCFE-A2F2-11205FC12F8B">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:48:52 UTC</createdTime>
+<generatorID>12A6F11A-C6FF-656A-2C0C-89D6B2D98692</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<referedAttribute>AFE15B50-B3DE-4EEE-BBFC-DFB9E9F409D3</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Id" id="81155372-F01C-4459-0ABC-37835405B702">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:49:59 UTC</createdTime>
+<generatorID>C0BBB039-CE6E-E371-F222-8903F22AA191</generatorID>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>FDA05A3F-CEA7-2A38-E937-02C3AF221276</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D5B76FFE-215E-C9B2-1EEB-BEE334CA2305" name="Asignatura_Matricula PK">
+<createdBy>pedro</createdBy>
+<createdTime>2021-03-24 08:47:25 UTC</createdTime>
+<ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
+<engineerTo>
+<item key="3A5E72FE-48BB-1694-8357-3F7674EBAB5D" value="true"/>
+<item key="35778572-A2CF-5D3E-4CB8-9D3C698D4AC9" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>4080321A-57AB-E663-640C-EA42C83AFDB3</attributeRef>
+<attributeRef>53C769A9-A57F-0F49-3C6C-38646F8C9324</attributeRef>
+<attributeRef>D633C70F-4A59-DCFE-A2F2-11205FC12F8B</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,8 +1,13 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="DIAGRAMA_ENTIDAD_RELACION" id="7BE4A775-968D-8B03-7FEC-FC2C2D8D4A4B" version="3.5">
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="DIAGRAMA_ENTIDAD_RELACION" id="8FC21C0F-CDF5-97C5-53EA-83E1AB45AB84" version="3.5">
 <createdBy>pedro</createdBy>
-<createdTime>2021-03-17 15:17:35 UTC</createdTime>
+<createdTime>2021-03-24 08:05:47 UTC</createdTime>
 <ownerDesignName>DIAGRAMA_ENTIDAD_RELACION</ownerDesignName>
 <capitalNames>false</capitalNames>
-<designId>7BE4A775-968D-8B03-7FEC-FC2C2D8D4A4B</designId>
+<designId>8FC21C0F-CDF5-97C5-53EA-83E1AB45AB84</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="7BE4A775-968D-8B03-7FEC-FC2C2D8D4A4B">
+<designStoragePath>D:\DIAGRAMA_ENTIDAD_RELACION</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
 </OSDM_Design>
