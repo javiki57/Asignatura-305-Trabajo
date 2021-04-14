@@ -25,7 +25,7 @@ LOGGING;
 
 ALTER TABLE alumno ADD CONSTRAINT alumno_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
-ALTER TABLE alumno ADD CONSTRAINT alumno_dni_un UNIQUE ( dni ) USING INDEX TABLESPACE TS_INDICES;
+ALTER TABLE alumno ADD CONSTRAINT alumno_dni_un UNIQUE ( dni ); --USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE asignatura (
     referencia                       INTEGER NOT NULL,
@@ -68,7 +68,7 @@ LOGGING;
 
 ALTER TABLE centro ADD CONSTRAINT centro_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
-ALTER TABLE centro ADD CONSTRAINT centro_nombre_un UNIQUE ( nombre ) USING INDEX TABLESPACE TS_INDICES;
+ALTER TABLE centro ADD CONSTRAINT centro_nombre_un UNIQUE ( nombre ); --USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE clase (
     día                    DATE NOT NULL,
@@ -128,7 +128,7 @@ LOGGING;
 ALTER TABLE grupo ADD CONSTRAINT grupo_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
 ALTER TABLE grupo ADD CONSTRAINT grupo_letra_curso_un UNIQUE ( letra,
-                                                               curso ) USING INDEX TABLESPACE TS_INDICES;
+                                                               curso ); --USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE grupo_por_asignatura (
     curso_académico        INTEGER NOT NULL,
@@ -200,101 +200,101 @@ LOGGING;
 ALTER TABLE titulación ADD CONSTRAINT titulación_pk PRIMARY KEY ( código ) USING INDEX TABLESPACE TS_INDICES;
 
 ALTER TABLE asignatura_matricula
-    ADD CONSTRAINT asignatura_matri_fk FOREIGN KEY ( asignatura_referencia ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT asignatura_matri_fk FOREIGN KEY ( asignatura_referencia ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES asignatura ( referencia ) 
     NOT DEFERRABLE;
 
 ALTER TABLE asignatura_matricula
     ADD CONSTRAINT asignatura_matri_matr_fk FOREIGN KEY ( matrícula_curso_académico,
-                                                          num_expediente ) USING INDEX TABLESPACE TS_INDICES
+                                                          num_expediente ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES matrícula ( curso_académico,
                                expediente_num_expediente )
     NOT DEFERRABLE;
 
 ALTER TABLE asignatura_matricula
-    ADD CONSTRAINT asignatura_matricula_grupo_fk FOREIGN KEY ( grupo_id ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT asignatura_matricula_grupo_fk FOREIGN KEY ( grupo_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES grupo ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE asignatura
-    ADD CONSTRAINT asignatura_titulación_fk FOREIGN KEY ( titulación_código ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT asignatura_titulación_fk FOREIGN KEY ( titulación_código ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES titulación ( código )
     NOT DEFERRABLE;
 
 ALTER TABLE clase
-    ADD CONSTRAINT clase_asignatura_fk FOREIGN KEY ( asignatura_referencia ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT clase_asignatura_fk FOREIGN KEY ( asignatura_referencia ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES asignatura ( referencia )
     NOT DEFERRABLE;
 
 ALTER TABLE clase
-    ADD CONSTRAINT clase_grupo_fk FOREIGN KEY ( grupo_id ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT clase_grupo_fk FOREIGN KEY ( grupo_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES grupo ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE encuesta
-    ADD CONSTRAINT encuesta_expediente_fk FOREIGN KEY ( expediente_num_expediente ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT encuesta_expediente_fk FOREIGN KEY ( expediente_num_expediente ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES expediente ( num_expediente )
     NOT DEFERRABLE;
 
 ALTER TABLE expediente
-    ADD CONSTRAINT expediente_alumno_fk FOREIGN KEY ( alumno_id ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT expediente_alumno_fk FOREIGN KEY ( alumno_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES alumno ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE expediente
-    ADD CONSTRAINT expediente_titulación_fk FOREIGN KEY ( titulación_código ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT expediente_titulación_fk FOREIGN KEY ( titulación_código ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES titulación ( código )
     NOT DEFERRABLE;
 
 ALTER TABLE grupo
-    ADD CONSTRAINT grupo_grupo_fk FOREIGN KEY ( grupo_id ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT grupo_grupo_fk FOREIGN KEY ( grupo_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES grupo ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE grupo_por_asignatura
-    ADD CONSTRAINT grupo_por_asig_asig_fk FOREIGN KEY ( asignatura_referencia ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT grupo_por_asig_asig_fk FOREIGN KEY ( asignatura_referencia ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES asignatura ( referencia )
     NOT DEFERRABLE;
 
 ALTER TABLE grupo_por_asignatura
-    ADD CONSTRAINT grupo_por_asig_grupo_fk FOREIGN KEY ( grupo_id ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT grupo_por_asig_grupo_fk FOREIGN KEY ( grupo_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES grupo ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE grupo
-    ADD CONSTRAINT grupo_titulación_fk FOREIGN KEY ( titulación_código ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT grupo_titulación_fk FOREIGN KEY ( titulación_código ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES titulación ( código )
     NOT DEFERRABLE;
 
 ALTER TABLE matrícula
-    ADD CONSTRAINT matrícula_expediente_fk FOREIGN KEY ( expediente_num_expediente ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT matrícula_expediente_fk FOREIGN KEY ( expediente_num_expediente ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES expediente ( num_expediente )
     NOT DEFERRABLE;
 
 ALTER TABLE op
-    ADD CONSTRAINT op_asignatura_fk FOREIGN KEY ( referencia ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT op_asignatura_fk FOREIGN KEY ( referencia ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES asignatura ( referencia )
     NOT DEFERRABLE;
 
 ALTER TABLE relation_14
-    ADD CONSTRAINT rel_14_encuesta_fk FOREIGN KEY ( encuesta_fecha_de_envío ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT rel_14_encuesta_fk FOREIGN KEY ( encuesta_fecha_de_envío ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES encuesta ( fecha_de_envío )
     NOT DEFERRABLE;
 
 ALTER TABLE relation_2
-    ADD CONSTRAINT relation_2_centro_fk FOREIGN KEY ( centro_id ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT relation_2_centro_fk FOREIGN KEY ( centro_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES centro ( id )
     NOT DEFERRABLE;
 
 ALTER TABLE relation_2
-    ADD CONSTRAINT relation_2_titulación_fk FOREIGN KEY ( titulación_código ) USING INDEX TABLESPACE TS_INDICES
+    ADD CONSTRAINT relation_2_titulación_fk FOREIGN KEY ( titulación_código ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES titulación ( código )
     NOT DEFERRABLE;
 
 ALTER TABLE relation_14
     ADD CONSTRAINT ren_14_grupo_por_asig_fk FOREIGN KEY ( grupo_curso_académico,
                                                           grupo_asignatura_referencia,
-                                                          grup_por_asig_grup_id ) USING INDEX TABLESPACE TS_INDICES
+                                                          grup_por_asig_grup_id ) --USING INDEX TABLESPACE TS_INDICES
         REFERENCES grupo_por_asignatura ( curso_académico,
                                           asignatura_referencia,
                                           grupo_id )
