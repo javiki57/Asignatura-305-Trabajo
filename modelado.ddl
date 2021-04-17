@@ -16,58 +16,58 @@ CREATE TABLE alumno (
     email_institucional         VARCHAR2(128) NOT NULL,
     email_personal              VARCHAR2(128),
     telefono                    INTEGER,
-    móvil                       INTEGER,
-    dirección_notificiacion     VARCHAR2(128),
-    código_postal_notificación  INTEGER,
+    mï¿½vil                       INTEGER,
+    direcciï¿½n_notificiacion     VARCHAR2(128),
+    cï¿½digo_postal_notificaciï¿½n  INTEGER,
     fecha_nacimiento            DATE
 );
 
-ALTER TABLE alumno ADD CONSTRAINT alumno_pk PRIMARY KEY ( id );
+ALTER TABLE alumno ADD CONSTRAINT alumno_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;;
 
 ALTER TABLE alumno ADD CONSTRAINT alumno_dni_un UNIQUE ( dni );
 
 CREATE TABLE asignatura (
     referencia                       INTEGER NOT NULL,
-    código                           INTEGER NOT NULL,
-    créditos                         INTEGER NOT NULL,
+    cï¿½digo                           INTEGER NOT NULL,
+    crï¿½ditos                         INTEGER NOT NULL,
     ofertada                         CHAR(1) NOT NULL,
     nombre                           VARCHAR2(128) NOT NULL,
     curso                            INTEGER,
-    carácter                         VARCHAR2(128),
-    duración                         INTEGER,
+    carï¿½cter                         VARCHAR2(128),
+    duraciï¿½n                         INTEGER,
     "Undiad_Temporal(Cuatrimestre)"  INTEGER,
-    idiomas_de_impartición           VARCHAR2(128),
-    titulación_código                INTEGER NOT NULL,
+    idiomas_de_imparticiï¿½n           VARCHAR2(128),
+    titulaciï¿½n_cï¿½digo                INTEGER NOT NULL,
     departamento                     VARCHAR2(128)
 );
 
-ALTER TABLE asignatura ADD CONSTRAINT asignatura_pk PRIMARY KEY ( referencia );
+ALTER TABLE asignatura ADD CONSTRAINT asignatura_pk PRIMARY KEY ( referencia ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE asignatura_matricula (
     asignatura_referencia      INTEGER NOT NULL,
-    matrícula_curso_académico  INTEGER NOT NULL,
-    matrícula_num_exp          INTEGER NOT NULL,
+    matrï¿½cula_curso_acadï¿½mico  INTEGER NOT NULL,
+    matrï¿½cula_num_exp          INTEGER NOT NULL,
     grupo_id                   INTEGER
 );
 
 ALTER TABLE asignatura_matricula
     ADD CONSTRAINT asignatura_matricula_pk PRIMARY KEY ( asignatura_referencia,
-                                                         matrícula_curso_académico,
-                                                         matrícula_num_exp );
+                                                         matrï¿½cula_curso_acadï¿½mico,
+                                                         matrï¿½cula_num_exp ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE centro (
     id               INTEGER NOT NULL,
     nombre           VARCHAR2(128) NOT NULL,
-    dirección        VARCHAR2(128) NOT NULL,
-    tlf_conserjería  INTEGER
+    direcciï¿½n        VARCHAR2(128) NOT NULL,
+    tlf_conserjerï¿½a  INTEGER
 );
 
-ALTER TABLE centro ADD CONSTRAINT centro_pk PRIMARY KEY ( id );
+ALTER TABLE centro ADD CONSTRAINT centro_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
 ALTER TABLE centro ADD CONSTRAINT centro_nombre_un UNIQUE ( nombre );
 
 CREATE TABLE clase (
-    día                    DATE NOT NULL,
+    dï¿½a                    DATE NOT NULL,
     hora_inicio            DATE NOT NULL,
     hora_fin               DATE,
     asignatura_referencia  INTEGER NOT NULL,
@@ -75,84 +75,84 @@ CREATE TABLE clase (
 );
 
 ALTER TABLE clase
-    ADD CONSTRAINT clase_pk PRIMARY KEY ( día,
+    ADD CONSTRAINT clase_pk PRIMARY KEY ( dï¿½a,
                                           hora_inicio,
-                                          grupo_id );
+                                          grupo_id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE encuesta (
-    fecha_de_envío             DATE NOT NULL,
+    fecha_de_envï¿½o             DATE NOT NULL,
     expediente_num_expediente  INTEGER NOT NULL
 );
 
-ALTER TABLE encuesta ADD CONSTRAINT encuesta_pk PRIMARY KEY ( fecha_de_envío );
+ALTER TABLE encuesta ADD CONSTRAINT encuesta_pk PRIMARY KEY ( fecha_de_envï¿½o ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE expediente (
     num_expediente               INTEGER NOT NULL,
     activo                       CHAR(1),
     nota_media_provisional       NUMBER,
-    titulación_código            INTEGER NOT NULL,
+    titulaciï¿½n_cï¿½digo            INTEGER NOT NULL,
     alumno_id                    VARCHAR2(128) NOT NULL,
-    créditos_superados           INTEGER,
-    créditos_formación_básica    INTEGER,
-    créditos_optativos           INTEGER,
-    créditos_prácticas_externas  INTEGER,
-    créditos_tfg                 INTEGER,
-    créditos_cf                  INTEGER
+    crï¿½ditos_superados           INTEGER,
+    crï¿½ditos_formaciï¿½n_bï¿½sica    INTEGER,
+    crï¿½ditos_optativos           INTEGER,
+    crï¿½ditos_prï¿½cticas_externas  INTEGER,
+    crï¿½ditos_tfg                 INTEGER,
+    crï¿½ditos_cf                  INTEGER
 );
 
-ALTER TABLE expediente ADD CONSTRAINT expediente_pk PRIMARY KEY ( num_expediente );
+ALTER TABLE expediente ADD CONSTRAINT expediente_pk PRIMARY KEY ( num_expediente ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE grupo (
     id                  INTEGER NOT NULL,
     curso               INTEGER NOT NULL,
     letra               CHAR(1) NOT NULL,
-    turno_mañana_tarde  VARCHAR2(128) NOT NULL,
-    inglés              CHAR(1) NOT NULL,
+    turno_maï¿½ana_tarde  VARCHAR2(128) NOT NULL,
+    inglï¿½s              CHAR(1) NOT NULL,
     visible             CHAR(1),
     asignar             CHAR(1),
     plazas              INTEGER,
     grupo_id            INTEGER,
-    titulación_código   INTEGER NOT NULL
+    titulaciï¿½n_cï¿½digo   INTEGER NOT NULL
 );
 
-ALTER TABLE grupo ADD CONSTRAINT grupo_pk PRIMARY KEY ( id );
+ALTER TABLE grupo ADD CONSTRAINT grupo_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
 ALTER TABLE grupo ADD CONSTRAINT grupo_letra_curso_un UNIQUE ( letra,
                                                                curso );
 
 CREATE TABLE grupo_por_asignatura (
-    curso_académico        INTEGER NOT NULL,
+    curso_acadï¿½mico        INTEGER NOT NULL,
     oferta                 INTEGER,
     asignatura_referencia  INTEGER NOT NULL,
     grupo_id               INTEGER NOT NULL
 );
 
 ALTER TABLE grupo_por_asignatura
-    ADD CONSTRAINT grupo_por_asignatura_pk PRIMARY KEY ( curso_académico,
+    ADD CONSTRAINT grupo_por_asignatura_pk PRIMARY KEY ( curso_acadï¿½mico,
                                                          asignatura_referencia,
-                                                         grupo_id );
+                                                         grupo_id ) USING INDEX TABLESPACE TS_INDICES;
 
-CREATE TABLE matrícula (
-    curso_académico            INTEGER NOT NULL,
+CREATE TABLE matrï¿½cula (
+    curso_acadï¿½mico            INTEGER NOT NULL,
     estado                     VARCHAR2(128) NOT NULL,
     num_archivo                INTEGER,
     turno_preferente           VARCHAR2(128),
-    fecha_de_matrícula         DATE NOT NULL,
+    fecha_de_matrï¿½cula         DATE NOT NULL,
     nuevo_ingreso              CHAR(1),
     listado_asignaturas        VARCHAR2(128),
     expediente_num_expediente  INTEGER NOT NULL
 );
 
-ALTER TABLE matrícula ADD CONSTRAINT matrícula_pk PRIMARY KEY ( curso_académico,
-                                                                expediente_num_expediente );
+ALTER TABLE matrï¿½cula ADD CONSTRAINT matrï¿½cula_pk PRIMARY KEY ( curso_acadï¿½mico,
+                                                                expediente_num_expediente ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE op (
     referencia  INTEGER NOT NULL,
     plazas      INTEGER,
-    mención     VARCHAR2(128)
+    menciï¿½n     VARCHAR2(128)
 );
 
-ALTER TABLE op ADD CONSTRAINT op_pk PRIMARY KEY ( referencia );
+ALTER TABLE op ADD CONSTRAINT op_pk PRIMARY KEY ( referencia ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE relation_14 (
     encuesta_fecha        DATE NOT NULL,
@@ -165,36 +165,36 @@ ALTER TABLE relation_14
     ADD CONSTRAINT relation_14_pk PRIMARY KEY ( encuesta_fecha,
                                                 gp_por_asig_curso,
                                                 gp_asig_referencia,
-                                                gp_por_asig_grupo_id );
+                                                gp_por_asig_grupo_id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE relation_2 (
-    titulación_código  INTEGER NOT NULL,
+    titulaciï¿½n_cï¿½digo  INTEGER NOT NULL,
     centro_id          INTEGER NOT NULL
 );
 
-ALTER TABLE relation_2 ADD CONSTRAINT relation_2_pk PRIMARY KEY ( titulación_código,
-                                                                  centro_id );
+ALTER TABLE relation_2 ADD CONSTRAINT relation_2_pk PRIMARY KEY ( titulaciï¿½n_cï¿½digo,
+                                                                  centro_id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE relation_24 (
-    titulación_código  INTEGER NOT NULL,
+    titulaciï¿½n_cï¿½digo  INTEGER NOT NULL,
     op_referencia      INTEGER NOT NULL
 );
 
-ALTER TABLE relation_24 ADD CONSTRAINT relation_24_pk PRIMARY KEY ( titulación_código,
-                                                                    op_referencia );
+ALTER TABLE relation_24 ADD CONSTRAINT relation_24_pk PRIMARY KEY ( titulaciï¿½n_cï¿½digo,
+                                                                    op_referencia ) USING INDEX TABLESPACE TS_INDICES;
 
-CREATE TABLE titulación (
-    código    INTEGER NOT NULL,
+CREATE TABLE titulaciï¿½n (
+    cï¿½digo    INTEGER NOT NULL,
     nombre    VARCHAR2(128) NOT NULL,
-    créditos  INTEGER NOT NULL
+    crï¿½ditos  INTEGER NOT NULL
 );
 
-ALTER TABLE titulación ADD CONSTRAINT titulación_pk PRIMARY KEY ( código );
+ALTER TABLE titulaciï¿½n ADD CONSTRAINT titulaciï¿½n_pk PRIMARY KEY ( cï¿½digo ) USING INDEX TABLESPACE TS_INDICES;
 
 ALTER TABLE asignatura_matricula
-    ADD CONSTRAINT asign_matricula_matrícula_fk FOREIGN KEY ( matrícula_curso_académico,
-                                                              matrícula_num_exp )
-        REFERENCES matrícula ( curso_académico,
+    ADD CONSTRAINT asign_matricula_matrï¿½cula_fk FOREIGN KEY ( matrï¿½cula_curso_acadï¿½mico,
+                                                              matrï¿½cula_num_exp )
+        REFERENCES matrï¿½cula ( curso_acadï¿½mico,
                                expediente_num_expediente );
 
 ALTER TABLE asignatura_matricula
@@ -206,8 +206,8 @@ ALTER TABLE asignatura_matricula
         REFERENCES grupo ( id );
 
 ALTER TABLE asignatura
-    ADD CONSTRAINT asignatura_titulación_fk FOREIGN KEY ( titulación_código )
-        REFERENCES titulación ( código );
+    ADD CONSTRAINT asignatura_titulaciï¿½n_fk FOREIGN KEY ( titulaciï¿½n_cï¿½digo )
+        REFERENCES titulaciï¿½n ( cï¿½digo );
 
 ALTER TABLE clase
     ADD CONSTRAINT clase_asignatura_fk FOREIGN KEY ( asignatura_referencia )
@@ -222,8 +222,8 @@ ALTER TABLE encuesta
         REFERENCES expediente ( num_expediente );
 
 ALTER TABLE expediente
-    ADD CONSTRAINT exp_titulación_fk FOREIGN KEY ( titulación_código )
-        REFERENCES titulación ( código );
+    ADD CONSTRAINT exp_titulaciï¿½n_fk FOREIGN KEY ( titulaciï¿½n_cï¿½digo )
+        REFERENCES titulaciï¿½n ( cï¿½digo );
 
 ALTER TABLE expediente
     ADD CONSTRAINT expediente_alumno_fk FOREIGN KEY ( alumno_id )
@@ -242,11 +242,11 @@ ALTER TABLE grupo_por_asignatura
         REFERENCES grupo ( id );
 
 ALTER TABLE grupo
-    ADD CONSTRAINT grupo_titulación_fk FOREIGN KEY ( titulación_código )
-        REFERENCES titulación ( código );
+    ADD CONSTRAINT grupo_titulaciï¿½n_fk FOREIGN KEY ( titulaciï¿½n_cï¿½digo )
+        REFERENCES titulaciï¿½n ( cï¿½digo );
 
-ALTER TABLE matrícula
-    ADD CONSTRAINT matrícula_expediente_fk FOREIGN KEY ( expediente_num_expediente )
+ALTER TABLE matrï¿½cula
+    ADD CONSTRAINT matrï¿½cula_expediente_fk FOREIGN KEY ( expediente_num_expediente )
         REFERENCES expediente ( num_expediente );
 
 ALTER TABLE op
@@ -255,13 +255,13 @@ ALTER TABLE op
 
 ALTER TABLE relation_14
     ADD CONSTRAINT relation_14_encuesta_fk FOREIGN KEY ( encuesta_fecha )
-        REFERENCES encuesta ( fecha_de_envío );
+        REFERENCES encuesta ( fecha_de_envï¿½o );
 
 ALTER TABLE relation_14
     ADD CONSTRAINT relation_14_gp_por_asig_fk FOREIGN KEY ( gp_por_asig_curso,
                                                             gp_asig_referencia,
                                                             gp_por_asig_grupo_id )
-        REFERENCES grupo_por_asignatura ( curso_académico,
+        REFERENCES grupo_por_asignatura ( curso_acadï¿½mico,
                                           asignatura_referencia,
                                           grupo_id );
 
@@ -270,16 +270,16 @@ ALTER TABLE relation_2
         REFERENCES centro ( id );
 
 ALTER TABLE relation_2
-    ADD CONSTRAINT relation_2_titulación_fk FOREIGN KEY ( titulación_código )
-        REFERENCES titulación ( código );
+    ADD CONSTRAINT relation_2_titulaciï¿½n_fk FOREIGN KEY ( titulaciï¿½n_cï¿½digo )
+        REFERENCES titulaciï¿½n ( cï¿½digo );
 
 ALTER TABLE relation_24
     ADD CONSTRAINT relation_24_op_fk FOREIGN KEY ( op_referencia )
         REFERENCES op ( referencia );
 
 ALTER TABLE relation_24
-    ADD CONSTRAINT relation_24_titulación_fk FOREIGN KEY ( titulación_código )
-        REFERENCES titulación ( código );
+    ADD CONSTRAINT relation_24_titulaciï¿½n_fk FOREIGN KEY ( titulaciï¿½n_cï¿½digo )
+        REFERENCES titulaciï¿½n ( cï¿½digo );
 
 
 
