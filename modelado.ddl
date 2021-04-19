@@ -282,6 +282,134 @@ ALTER TABLE relation_24
         REFERENCES titulaci�n ( c�digo );
 
 
+--CREACION DE TODOS LOS INDICES
+
+CREATE INDEX idx_titulacion_codigo
+    ON titulación(upper(código))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_asignatura_referencia
+    ON asignatura(upper(referencia))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_centro_id
+    ON centro(upper(id))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_centro_nombre
+    ON centro(upper(nombre))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_op_referencia
+    ON op(upper(referencia))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_expediente
+    ON expediente(upper(num_expediente))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_alumno_id
+    ON alumno(upper(id))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_alumno_dni
+    ON alumno(upper(dni))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_encuesta_fecha
+    ON encuesTa(upper(fecha_de_envío)) -- MODIFICAR FECHA DE ENVIO
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_grupo_asig_curso
+    ON grupo_por_asignatura(upper(curso_académico))
+        TABLESPACE TS_INDICES;
+    
+CREATE INDEX idx_grupo_asig_referencia
+    ON grupo_por_asignatura(upper(asignatura_referencia))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_grupo_asig_id
+    ON grupo_por_asignatura(upper(grupo_id))
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_clase_dia
+    ON clase(upper(día)) 
+        TABLESPACE TS_INDICES; --MODIFICAR DIA
+
+CREATE INDEX idx_clase_hora
+    ON clase(upper(hora_inicio)) 
+        TABLESPACE TS_INDICES;
+    
+CREATE INDEX idx_clase_grupo_id
+    ON clase(upper(grupo_id)) 
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_matricula_curso
+    ON matrícula(upper(curso_académico)) 
+        TABLESPACE TS_INDICES; 
+        
+CREATE INDEX idx_matricula_exp
+    ON matrícula(upper(expediente_num_expediente)) 
+        TABLESPACE TS_INDICES; 
+
+CREATE INDEX idx_grupo_id
+    ON grupo(upper(id)) 
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_grupo_curso
+    ON grupo(upper(curso)) 
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_grupo_letra
+    ON grupo(upper(letra)) 
+        TABLESPACE TS_INDICES;
+
+CREATE INDEX idx_asig_matricula_referencia
+    ON asignatura_matricula(upper(asignatura_referencia)) 
+        TABLESPACE TS_INDICES;
+        
+CREATE INDEX idx_asig_matricula_curso
+    ON asignatura_matricula(upper(matrícula_curso_académico)) 
+        TABLESPACE TS_INDICES;
+        
+CREATE INDEX idx_asig_matricula_exp
+    ON asignatura_matricula(upper(matrícula_num_exp)) 
+        TABLESPACE TS_INDICES;
+        
+CREATE INDEX idx_rel_14_encuesta
+    ON relation_14(upper(encuesta_fecha)) 
+        TABLESPACE TS_INDICES;
+        
+CREATE INDEX idx_rel_14_curso
+    ON relation_14(upper(gp_por_asig_curso)) 
+        TABLESPACE TS_INDICES;
+        
+
+CREATE INDEX idx_rel_14_referencia
+    ON relation_14(upper(gp_asig_referencia)) 
+        TABLESPACE TS_INDICES;
+        
+CREATE INDEX idx_rel_14_id
+    ON relation_14(upper(gp_por_asig_grupo_id)) 
+        TABLESPACE TS_INDICES;
+                
+CREATE INDEX idx_rel_2_id
+    ON relation_2(upper(centro_id)) 
+        TABLESPACE TS_INDICES;
+                        
+CREATE INDEX idx_rel_2_codigo
+    ON relation_2(upper(titulación_código)) 
+        TABLESPACE TS_INDICES;
+                                
+CREATE INDEX idx_rel_24_codigo
+    ON relation_24(upper(titulación_código)) 
+        TABLESPACE TS_INDICES;
+          
+CREATE INDEX idx_rel_24_referencia
+    ON relation_24(upper(op_referencia)) 
+        TABLESPACE TS_INDICES;
+        
+
 
 -- Informe de Resumen de Oracle SQL Developer Data Modeler: 
 -- 
