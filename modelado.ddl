@@ -34,7 +34,7 @@ CREATE TABLE asignatura (
     nombre                           VARCHAR2(128) NOT NULL,
     curso                            INTEGER,
     caracter                         VARCHAR2(128),
-    duracion                         INTEGER,
+    duracion                         VARCHAR2(128),
     "Undiad_Temporal(Cuatrimestre)"  INTEGER,
     idiomas_de_imparticion           VARCHAR2(128),
     titulacion_codigo                INTEGER NOT NULL,
