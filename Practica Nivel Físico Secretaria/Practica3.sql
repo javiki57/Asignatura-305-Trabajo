@@ -8,7 +8,7 @@ SIZE 10M
 AUTOEXTEND ON;
 */
 
---Creamos el usuario secretaría asignandole el tablespace TS_SECRETARIA.
+--Creamos el usuario secretarï¿½a asignandole el tablespace TS_SECRETARIA.
 CREATE USER secretaria 
     IDENTIFIED BY secret
     DEFAULT TABLESPACE TS_SECRETARIA
@@ -34,6 +34,9 @@ AUTOEXTEND ON;
 --Asignamos la quota al usuario secretaria
 ALTER USER secretaria
     QUOTA unlimited on TS_SECRETARIA;
+
+ALTER USER secretaria
+    QUOTA unlimited on TS_INDICES;
     
 --Comprobamos que hemos creado los tablespaces correctamente
 select * from user_tablespaces;
