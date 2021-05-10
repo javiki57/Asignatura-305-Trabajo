@@ -1,24 +1,29 @@
---1 NO FUNCIONA TODAVIA 
+--1
 create or replace FUNCTION CURSO_ACTUAL RETURN VARCHAR2 AS Curso varchar2(50);
 Anio_Actual varchar2(10);
 begin
 
 Anio_Actual := substr(sysdate, 7);
-if (to_number(substr(sysdate, 4,2)) = 10) and (to_number(substr(sysdate, 1,2)) >= 5) then CURSO_ACTUAL.Curso := (to_number(Anio_Actual), '/', to_number(Anio_Actual)+1);
-    elsif (to_number(substr(sysdate, 4,2)) > 10) then CURSO_ACTUAL.Curso := (to_number(Anio_Actual), '/', to_Number(Anio_Actual)+1);
-        else CURSO_ACTUAL.Curso := (to_number(Anio_Actual)-1, '/', to_number(Anio_Actual));
+if (to_number(substr(sysdate, 4,2)) = 10) and (to_number(substr(sysdate, 1,2)) >= 5) then CURSO_ACTUAL.Curso := (to_number(Anio_Actual)|| '/'|| to_number(Anio_Actual)+1);
+    elsif (to_number(substr(sysdate, 4,2)) > 10) then CURSO_ACTUAL.Curso := (to_number(Anio_Actual)|| '/'|| to_Number(Anio_Actual)+1);
+        else CURSO_ACTUAL.Curso := (to_number(Anio_Actual)-1|| '/'|| to_number(Anio_Actual));
 end if;
 return Curso;
 end CURSO_ACTUAL;
+/
+
 --Ejercicio 2
-
-
-
-
-
-
-
-
+CREATE OR REPLACE FUNCTION OBTEN_GRUPO_ID 
+    (PTitulacion VARCHAR2, PCurso Number, PLetra VARCHAR2) 
+    RETURN VARCHAR2 AS
+    VAR_ID VARCHAR2(38);
+BEGIN
+    SELECT G.ID INTO VAR_ID FROM GRUPO G, GRUPO_POR_ASIGNATURA GPA, ASIGNATURA A 
+        WHERE G.CURSO=PCURSO AND G.LETRA=PLETRA AND G.ID=GPA.GRUPO_ID AND
+        GPA.ASIGNATURA_REFERENCIA=A.REFERENCIA AND A.TITULACION_CODIGO=PTITULACION;
+    RETURN VAR_ID;
+END OBTEN_GRUPO_ID;
+/
 
 
 --Ejercicio 3
@@ -27,12 +32,13 @@ CREATE GLOBAL TEMPORARY TABLE "SECRETARIA"."TEMP_ASIGNATURAS"("CODIGO" NUMBER, G
 --Ejercicio 4
 create or replace procedure normaliza_asignaturas (pcadena varchar2, Titulacion varchar2 default null) 
 AS
-codigo number;
+codigo varchar2(30);
 letra varchar2(30);
 id_codigo varchar2(30);
 id_grupo varchar2(30); 
 NUM number;
 COUNTER number; 
+curso number;
 BEGIN
 COUNTER := 1;
 select * into NUM from(select count(*) from (select regexp_substr('pcadena','[^,]+', 1, level) from dual connect by regexp_substr('pcadena', '[^,]+', 1, level) is not null));--numero de grupos que hay en la cadena.    
@@ -40,29 +46,27 @@ select * into NUM from(select count(*) from (select regexp_substr('pcadena','[^,
     while ( COUNTER <= NUM ) loop
          select * into codigo from(select regexp_substr(pcadena,'[^,]+', 1, level) from dual where rownum= COUNTER  connect by regexp_substr(pcadena, '[^,]+', 1, level) is not null);
          codigo := substr(codigo,1,3);
+         curso := to_Number(substr(codigo,1,1)); 
          select * into letra from (select regexp_substr(pcadena,'[^,]+', 1, level) from dual where rownum= COUNTER  connect by regexp_substr(pcadena, '[^,]+', 1, level) is not null);
          letra := substr(letra,5, 1);
-         id_grupo := OBTENER_GRUPO_ID(Titulacion, substr(codigo,1,1), letra);
+         id_grupo := OBTEN_GRUPO_ID(Titulacion, curso, letra);
          
-         insert into "SECRETARIA"."TEMP_ASIGNATURAS" values (codigo, id_grupo);
+         insert into "SECRETARIA"."TEMP_ASIGNATURAS" values (to_number(codigo), id_grupo);
          
          COUNTER := COUNTER + 1; 
          END LOOP;
 
 END normaliza_asignaturas;
 /
-
+--EXEC normaliza_asignaturas('207-A,208-,306-B,402-A,403-B');
 --select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from dual
 --connect by regexp_substr('207-A,208-,306-B,402-,403-', '[^,]+', 1, level) is not null);
 
 --select regexp_substr('207-A,208-C,306-B,402-D,403-D','[^,]+', 1, level) from dual
 --connect by regexp_substr('207-A,208C-,306-B,402-D,403-D', '[^,]+', 1, level) is not null;
 
- 
-                                             
 --EJERCICIO 5                                           
-
-CREATE PROCEDURE  RELLENA_ASIG_MATRICULA (alumnos_ext TABLE)
+CREATE OR REPLACE PROCEDURE  RELLENA_ASIG_MATRICULA (alumnos_ext TABLE)
 AS 
 	--
 	--	  OOOOO       JJJJJJJJJ	    OOOOO
@@ -75,17 +79,17 @@ AS
 	--	  OOOOO	 	 JJJJ           OOOOO
 	--	
 	--
-	-- HABRÃA QUE AÃ‘ADIR UNA REPETICION POR CADA ALUMNO
+	-- HABRÍA QUE AÑADIR UNA REPETICION POR CADA ALUMNO
 	-- Y POSIBLEMENTE USAR OTRO PARAMETRO PARA EL PROCEDIMIENTO
 
 	nombre varchar2(128);
-	1erApellido varchar2(128);
-	2oApellido varchar2(128);
+    Apellido1 varchar2(128);
+	Apellido2 varchar2(128);
 	codigo number;
 	referencia number;
 	curso_actual number;
 	grupo_id varchar2(10);
-	ingles varchar2(50) defautl null;
+	ingles varchar2(50) default null;
 	COUNTER number;
 	COUNTER_ALUMNO number;
 	NUM number;
@@ -101,30 +105,30 @@ AS
 
 	SELECT * into NUM_ALUMNO FROM (SELECT COUNT(*) FROM alumnos_ext);
 
-	WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) THEN 
+	WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) LOOP --THEN 
 
 	--guardamos los parametros del alumno en cuestion
 		select NOMBRE into nombre FROM alumnos_ext
-			WHERE ROWNUMBER() == COUNTER_ALUMNO;
+			WHERE ROWNUMBER() = COUNTER_ALUMNO;
 
-		select APELLIDO1 into 1erApellido FROM alumnos_ext
-			WHERE ROWNUMBER() == COUNTER_ALUMNO;
+		select APELLIDO1 into Apellido1 FROM alumnos_ext
+			WHERE ROWNUMBER() = COUNTER_ALUMNO;
 
-		select APELLIDO2 into 2oApellido FROM alumnos_ext
-			WHERE ROWNUMBER() == COUNTER_ALUMNO;
+		select APELLIDO2 into Apellido2 FROM alumnos_ext
+			WHERE ROWNUMBER() = COUNTER_ALUMNO;
 
 
 
 		SELECT SUBSTR(expediente,1,4) INTO TITULACION FROM alumnos_ext
-			WHERE NOMBRE LIKE nombre &&
-				APELLIDO1 LIKE  1erApellido &&
-				APELLIDO2 LIKE 2oApellido;
+			WHERE NOMBRE LIKE nombre AND
+				APELLIDO1 LIKE  Apellido1 AND
+				APELLIDO2 LIKE Apellido2;
 
 
 		SELECT GRUPOS_ASIGNADOS  into ASIGNATURAS from alumnos_ext
-			WHERE NOMBRE LIKE nombre &&
-				APELLIDO1 LIKE  1erApellido &&
-				APELLIDO2 LIKE 2oApellido;
+			WHERE NOMBRE LIKE nombre AND
+				APELLIDO1 LIKE  Apellido1 AND
+				APELLIDO2 LIKE Apellido2;
 
 
 		select * into NUM from (select count(*) from (normaliza_asignaturas(ASIGNATURAS, TITULACION)));
