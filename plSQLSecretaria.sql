@@ -58,4 +58,100 @@ END normaliza_asignaturas;
 --select regexp_substr('207-A,208-C,306-B,402-D,403-D','[^,]+', 1, level) from dual
 --connect by regexp_substr('207-A,208C-,306-B,402-D,403-D', '[^,]+', 1, level) is not null;
 
+ 
+                                             
+--EJERCICIO 5                                           
 
+CREATE PROCEDURE  RELLENA_ASIG_MATRICULA (alumnos_ext TABLE)
+AS 
+	--
+	--	  OOOOO       JJJJJJJJJ	    OOOOO
+	--	OO     OO         J	      OO     OO
+	--	O       O         J       O       O
+	--	O       O         J       O       O
+	--	O       O         J       O       O
+	--	O       O         J       O       O
+	--	OO     OO   J    JJ       OO     OO
+	--	  OOOOO	 	 JJJJ           OOOOO
+	--	
+	--
+	-- HABRÍA QUE AÑADIR UNA REPETICION POR CADA ALUMNO
+	-- Y POSIBLEMENTE USAR OTRO PARAMETRO PARA EL PROCEDIMIENTO
+
+	nombre varchar2(128);
+	1erApellido varchar2(128);
+	2oApellido varchar2(128);
+	codigo number;
+	referencia number;
+	curso_actual number;
+	grupo_id varchar2(10);
+	ingles varchar2(50) defautl null;
+	COUNTER number;
+	COUNTER_ALUMNO number;
+	NUM number;
+	NUM_ALUMNO number;
+	ASIGNATURAS varchar2(128);
+	TITULACION varchar2(50); 
+
+
+	BEGIN
+
+	COUNTER := 1;
+	COUNTER_ALUMNO := 1;
+
+	SELECT * into NUM_ALUMNO FROM (SELECT COUNT(*) FROM alumnos_ext);
+
+	WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) THEN 
+
+	--guardamos los parametros del alumno en cuestion
+		select NOMBRE into nombre FROM alumnos_ext
+			WHERE ROWNUMBER() == COUNTER_ALUMNO;
+
+		select APELLIDO1 into 1erApellido FROM alumnos_ext
+			WHERE ROWNUMBER() == COUNTER_ALUMNO;
+
+		select APELLIDO2 into 2oApellido FROM alumnos_ext
+			WHERE ROWNUMBER() == COUNTER_ALUMNO;
+
+
+
+		SELECT SUBSTR(expediente,1,4) INTO TITULACION FROM alumnos_ext
+			WHERE NOMBRE LIKE nombre &&
+				APELLIDO1 LIKE  1erApellido &&
+				APELLIDO2 LIKE 2oApellido;
+
+
+		SELECT GRUPOS_ASIGNADOS  into ASIGNATURAS from alumnos_ext
+			WHERE NOMBRE LIKE nombre &&
+				APELLIDO1 LIKE  1erApellido &&
+				APELLIDO2 LIKE 2oApellido;
+
+
+		select * into NUM from (select count(*) from (normaliza_asignaturas(ASIGNATURAS, TITULACION)));
+
+		WHILE (COUNTER <= NUM) LOOP 
+
+			select * into codigo FROM (normaliza_asignaturas(ASIGNATURAS, TITULACION))
+				WHERE ROWNUMBER() == COUNTER;
+
+			SELECT referencia INTO referencia FROM ASIGNATURAS
+				WHERE codigo LIKE codigo;
+
+			SELECT * INTO curso_actual FROM (curso_actual());
+
+			SELECT * INTO grupo_id FROM (grupo_id(TITULACION, )) --NO TENGO DE DONDE OBTENER LOS PARAMETROS CURSO Y LETRA
+
+			ingles := NULL;
+
+			-- FALTA INSERTAR LA FILA ENTERA EN ASIGNATURA MATRICULA, PERO NO SE DONDE INSERTARLA
+
+
+			COUNTER := COUNTER + 1
+
+		END LOOP;
+
+		COUNTER_ALUMNO = COUNTER_ALUMNO + 1;
+
+	END LOOP;
+	 
+END RELLENA_ASIG_MATRICULA;
