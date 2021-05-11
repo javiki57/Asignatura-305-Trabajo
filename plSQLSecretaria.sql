@@ -79,16 +79,19 @@ AS
 	--	  OOOOO	 	 JJJJ           OOOOO
 	--	
 	--
-	-- HABRÕA QUE A—ADIR UNA REPETICION POR CADA ALUMNO
+	-- HABR√çA QUE A√ëADIR UNA REPETICION POR CADA ALUMNO
 	-- Y POSIBLEMENTE USAR OTRO PARAMETRO PARA EL PROCEDIMIENTO
 
 	nombre varchar2(128);
     Apellido1 varchar2(128);
 	Apellido2 varchar2(128);
-	codigo number;
-	referencia number;
-	curso_actual number;
+	codigoAsig number;
+	referencia2 number;
+	expediente varchar2(128);
+	--curso_actual number;
 	grupo_id varchar2(10);
+	CURSO VARCHAR2(10);
+	LETRA VARCHAR2(1);
 	ingles varchar2(50) default null;
 	COUNTER number;
 	COUNTER_ALUMNO number;
@@ -130,29 +133,41 @@ AS
 				APELLIDO1 LIKE  Apellido1 AND
 				APELLIDO2 LIKE Apellido2;
 
+		exec normaliza_asignaturas(ASIGNATURA,TITULACION);
 
-		select * into NUM from (select count(*) from (normaliza_asignaturas(ASIGNATURAS, TITULACION)));
+		select * into NUM from (select count(*) from (TEMP_ASIGNATURAS));
 
 		WHILE (COUNTER <= NUM) LOOP 
 
-			select * into codigo FROM (normaliza_asignaturas(ASIGNATURAS, TITULACION))
-				WHERE ROWNUMBER() == COUNTER;
+			select NEXPEDIENTE into expediente FROM alumnos_ext
+				WHERE NOMBRE LIKE nombre AND
+				APELLIDO1 LIKE  Apellido1 AND
+				APELLIDO2 LIKE Apellido2;
+
+			select * into codigoAsig FROM (TEMP_ASIGNATURAS)
+				WHERE ROWNUMBER() = COUNTER;
+
+			SELECT REFERENCIA into referencia2 FROM ASIGNATURAS
+				WHERE CODIGO LIKE codigoAsig;
 
 			SELECT referencia INTO referencia FROM ASIGNATURAS
-				WHERE codigo LIKE codigo;
+				WHERE codigo LIKE codigoAsig;
 
-			SELECT * INTO curso_actual FROM (curso_actual());
+			--SELECT * INTO curso_actual FROM (curso_actual());
 
-			SELECT * INTO grupo_id FROM (grupo_id(TITULACION, )) --NO TENGO DE DONDE OBTENER LOS PARAMETROS CURSO Y LETRA
+			SELECT GRUPO INTO CURSO FROM TEMP_ASIGNATURAS
+				WHERE CODIGO LIKE codigoAsig; 
 
-			ingles := NULL;
+			SELECT * INTO grupo_id FROM (TEMP_ASIGNATURAS)
+				WHERE codigo LIKE codigoAsig;
 
-			-- FALTA INSERTAR LA FILA ENTERA EN ASIGNATURA MATRICULA, PERO NO SE DONDE INSERTARLA
 
 
 			COUNTER := COUNTER + 1
 
 		END LOOP;
+
+		INSERT ASIGNATURA_MATRICULA VALUES(referencia2, curso_actual() ,expediente, grupo_id )
 
 		COUNTER_ALUMNO = COUNTER_ALUMNO + 1;
 
