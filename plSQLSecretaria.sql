@@ -66,7 +66,7 @@ END normaliza_asignaturas;
 --connect by regexp_substr('207-A,208C-,306-B,402-D,403-D', '[^,]+', 1, level) is not null;
 
 --EJERCICIO 5                                           
-CREATE OR REPLACE PROCEDURE  RELLENA_ASIG_MATRICULA (alumnos_ext TABLE)
+CREATE OR REPLACE PROCEDURE  RELLENA_ASIG_MATRICULA
 AS 
 	--
 	--	  OOOOO       JJJJJJJJJ	    OOOOO
@@ -79,7 +79,7 @@ AS
 	--	  OOOOO	 	 JJJJ           OOOOO
 	--	
 	--
-	-- HABRÍA QUE AÑADIR UNA REPETICION POR CADA ALUMNO
+	-- HABR�?A QUE AÑADIR UNA REPETICION POR CADA ALUMNO
 	-- Y POSIBLEMENTE USAR OTRO PARAMETRO PARA EL PROCEDIMIENTO
 
 	nombre varchar2(128);
@@ -112,13 +112,13 @@ AS
 
 	--guardamos los parametros del alumno en cuestion
 		select NOMBRE into nombre FROM alumnos_ext
-			WHERE ROWNUMBER() = COUNTER_ALUMNO;
+			WHERE ROWNUM = COUNTER_ALUMNO;
 
 		select APELLIDO1 into Apellido1 FROM alumnos_ext
-			WHERE ROWNUMBER() = COUNTER_ALUMNO;
+			WHERE ROWNUM = COUNTER_ALUMNO;
 
 		select APELLIDO2 into Apellido2 FROM alumnos_ext
-			WHERE ROWNUMBER() = COUNTER_ALUMNO;
+			WHERE ROWNUM = COUNTER_ALUMNO;
 
 
 
@@ -133,7 +133,7 @@ AS
 				APELLIDO1 LIKE  Apellido1 AND
 				APELLIDO2 LIKE Apellido2;
 
-		exec normaliza_asignaturas(ASIGNATURA,TITULACION);
+		normaliza_asignaturas(ASIGNATURAS,TITULACION);
 
 		select * into NUM from (select count(*) from (TEMP_ASIGNATURAS));
 
@@ -145,7 +145,7 @@ AS
 				APELLIDO2 LIKE Apellido2;
 
 			select * into codigoAsig FROM (TEMP_ASIGNATURAS)
-				WHERE ROWNUMBER() = COUNTER;
+				WHERE ROWNUM = COUNTER;
 
 			SELECT REFERENCIA into referencia2 FROM ASIGNATURAS
 				WHERE CODIGO LIKE codigoAsig;
@@ -163,14 +163,16 @@ AS
 
 
 
-			COUNTER := COUNTER + 1
+			COUNTER := COUNTER + 1;
 
 		END LOOP;
 
-		INSERT ASIGNATURA_MATRICULA VALUES(referencia2, curso_actual() ,expediente, grupo_id )
+		INSERT INTO ASIGNATURA_MATRICULA VALUES(referencia2, curso_actual() ,expediente, grupo_id );
 
-		COUNTER_ALUMNO = COUNTER_ALUMNO + 1;
+		COUNTER_ALUMNO := COUNTER_ALUMNO + 1;
 
 	END LOOP;
 	 
 END RELLENA_ASIG_MATRICULA;
+/
+
