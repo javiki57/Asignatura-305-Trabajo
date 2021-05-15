@@ -71,19 +71,7 @@ END normaliza_asignaturas;
 --EJERCICIO 5                                           
 CREATE OR REPLACE PROCEDURE  RELLENA_ASIG_MATRICULA
 AS 
-	--
-	--	  OOOOO       JJJJJJJJJ	    OOOOO
-	--	OO     OO         J	      OO     OO
-	--	O       O         J       O       O
-	--	O       O         J       O       O
-	--	O       O         J       O       O
-	--	O       O         J       O       O
-	--	OO     OO   J    JJ       OO     OO
-	--	  OOOOO	 	 JJJJ           OOOOO
-	--	
-	--
-	-- HABRÃ?A QUE AÃ‘ADIR UNA REPETICION POR CADA ALUMNO
-	-- Y POSIBLEMENTE USAR OTRO PARAMETRO PARA EL PROCEDIMIENTO
+
 
 	nombre varchar2(128);
     Apellido1 varchar2(128);
@@ -91,7 +79,7 @@ AS
 	codigoAsig number;
 	referencia2 number;
 	expediente varchar2(128);
-	--curso_actual number;
+
 	grupo_id varchar2(10);
 	CURSO VARCHAR2(10);
 	LETRA VARCHAR2(1);
@@ -111,9 +99,9 @@ AS
 
 	SELECT * into NUM_ALUMNO FROM (SELECT COUNT(*) FROM alumnos_ext);
 
-	WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) LOOP --THEN 
+	WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) LOOP 
 
-	--guardamos los parametros del alumno en cuestion
+
 		select NOMBRE into nombre FROM alumnos_ext
 			WHERE ROWNUM = COUNTER_ALUMNO;
 
@@ -152,11 +140,6 @@ AS
 
 			SELECT REFERENCIA into referencia2 FROM ASIGNATURAS
 				WHERE CODIGO LIKE codigoAsig;
-
-			SELECT referencia INTO referencia FROM ASIGNATURAS
-				WHERE codigo LIKE codigoAsig;
-
-			--SELECT * INTO curso_actual FROM (curso_actual());
 
 			SELECT GRUPO INTO CURSO FROM TEMP_ASIGNATURAS
 				WHERE CODIGO LIKE codigoAsig; 
