@@ -24,6 +24,7 @@ BEGIN
     RETURN VAR_ID;
 END OBTEN_GRUPO_ID;
 /
+--select * from OBTEN_GRUPO_ID(1041, 1, 'A');
 
 
 --Ejercicio 3
@@ -55,10 +56,12 @@ select * into NUM from(select count(*) from (select regexp_substr('pcadena','[^,
          
          COUNTER := COUNTER + 1; 
          END LOOP;
+         COMMIT;
 
 END normaliza_asignaturas;
 /
 --EXEC normaliza_asignaturas('207-A,208-,306-B,402-A,403-B');
+--EXEC normaliza_asignaturas('105-A,205-B', '1041');
 --select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from dual
 --connect by regexp_substr('207-A,208-,306-B,402-,403-', '[^,]+', 1, level) is not null);
 
@@ -172,6 +175,7 @@ AS
 		COUNTER_ALUMNO := COUNTER_ALUMNO + 1;
 
 	END LOOP;
+    COMMIT;
 	 
 END RELLENA_ASIG_MATRICULA;
 /
