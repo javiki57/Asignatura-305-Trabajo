@@ -37,27 +37,34 @@ codigo varchar2(30);
 letra varchar2(30);
 id_codigo varchar2(30);
 id_grupo varchar2(30); 
-NUM number;
 COUNTER number; 
 curso number;
+pos number;
+subcadena varchar(20);
 BEGIN
-COUNTER := 1;
-select * into NUM from(select count(*) from (select regexp_substr('pcadena','[^,]+', 1, level) from dual connect by regexp_substr('pcadena', '[^,]+', 1, level) is not null));--numero de grupos que hay en la cadena.    
-   
-    while ( COUNTER <= NUM ) loop
-         select * into codigo from(select regexp_substr(pcadena,'[^,]+', 1, level) from dual where rownum= COUNTER  connect by regexp_substr(pcadena, '[^,]+', 1, level) is not null);
-         codigo := substr(codigo,1,3);
-         curso := to_Number(substr(codigo,1,1)); 
-         select * into letra from (select regexp_substr(pcadena,'[^,]+', 1, level) from dual where rownum= COUNTER  connect by regexp_substr(pcadena, '[^,]+', 1, level) is not null);
-         letra := substr(letra,5, 1);
+COUNTER := 0;
+pos := instr(pcadena,',');--5
+subcadena := substr(pcadena, 1, pos-1);   --"201-A"
+    while (COUNTER <= length(pcadena)) loop
+         codigo := substr(subcadena,1,3);--"201"
+         curso := to_Number(substr(subcadena,1,1));--"2" 
+         letra := substr(subcadena,5, 1);--"A"
+         if letra is not null then
          id_grupo := OBTEN_GRUPO_ID(Titulacion, curso, letra);
-         
-         insert into "SECRETARIA"."TEMP_ASIGNATURAS" values (to_number(codigo), id_grupo);
-         
-         COUNTER := COUNTER + 1; 
-         END LOOP;
+            insert into "SECRETARIA"."TEMP_ASIGNATURAS" values (to_number(codigo), id_grupo);
+         else 
+            insert into "SECRETARIA"."TEMP_ASIGNTAURAS" values (to_number(codigo), null);
+        end if;
+        --subcad|
+        --|.....|(                     )
+        --"207-A,208-B,306-B,402-A,403-B"
+        pcadena := substr (pcadena, pos+1);--"208-B,306-B,402-A,403-B"
+        --pos := instr(pcadena,',');
+        subcadena := substr(pcadena, 1, pos-1);   
+    
+         COUNTER := COUNTER + pos;
          COMMIT;
-
+         END LOOP;
 END normaliza_asignaturas;
 /
 --EXEC normaliza_asignaturas('207-A,208-,306-B,402-A,403-B');
