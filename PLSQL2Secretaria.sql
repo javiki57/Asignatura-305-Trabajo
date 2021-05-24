@@ -41,28 +41,33 @@ create or replace package body PK_ASIGNACION_GRUPOS as
 procedure PR_ASIGNA_ASIGNADOS is 
     cursor alumnoCursor is select nuevo_ingreso.documento, alumnosext.documento from nuevo_ingreso inner join alumnosext 
         on nuevo_ingreso.documento = alumnoext.documento;
+    cursor asignaturaCursor is select * from asignatura_matricula;
     pos number;
     pcadena varchar2(200);
-    COUNTER number; 
     subcadena varchar2(20);
     letra varchar2(1);
     Acodigo varchar2(5);
     begin
         for al in alumnoCursor loop
-            counter := 0;
+            
             pcadena := al.alumnosext.grupos_asignados;
             pos := instr(pcadena,',');--5
             subcadena := substr(pcadena, 1, pos-1);   --"201-A"
-            while (COUNTER <= length(pcadena)) loop
+            exec normaliza_asignaturas(grupo_asignado, substr(al.expediente,1,4));--llamada al procedimiento de edu
+            --VAMOS A MODIFICAR ESTO PARA SACAR LOS DATOS DEL PROCEDIMIENTO
+            
+            for unAsig in asignaturaCursor loop
                 Acodigo := substr(subcadena, 1,3); --devuelve el codigo de la asignatura (201 por ejemplo)
                 letra := substr(subcadena, 5); --letra o null
                 if letra is null then 
-                    insert into errores values(sysdate, 'No tiene letra del grupo', Acodigo, CURSO_ACTUAL(),null, null,al.alumnoext.nexpediente, al.titulacion);
-                    exit;
+                    insert into errores values(sysdate, 'No tiene letra del grupo', Acodigo, CURSO_ACTUAL(),null, null,al.expediente, substr(al.expediente,1,4));
+                    
                 else
-                    grupo := obten_grupo_id(titulacion, substr(subcadena,1), letra); 
-                    asignatura_matricula.grupo_id := 1; --COMO SE MODIFICA EL GRUPO_ID??? QUE ESTA ALMACENANDO GRUPO_ID EXACATAMENTE???
-                    insert into asignatura_matricula.
+                    grupo := obten_grupo_id(substr(al.expediente,1,4), substr(subcadena,1), letra); 
+                    unAsig.grupo_id := (grupo);
+                    --asignatura_matricula.grupo_id := 1; --COMO SE MODIFICA EL GRUPO_ID??? QUE ESTA ALMACENANDO GRUPO_ID EXACATAMENTE???
+                    --insert into asignatura_matricula.
+                    
                 end if;
             end loop;
             
