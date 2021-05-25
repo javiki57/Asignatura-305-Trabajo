@@ -39,7 +39,8 @@ id_grupo varchar2(30);
 COUNTER number; 
 curso number;
 pos number;
-subcadena varchar(20);
+cadenita varchar2(100);
+subcadena varchar2(20);
 BEGIN
 COUNTER := 0;
 pos := instr(pcadena,',');--5
@@ -57,9 +58,9 @@ subcadena := substr(pcadena, 1, pos-1);   --"201-A"
         --subcad|
         --|.....|(                     )
         --"207-A,208-B,306-B,402-A,403-B"
-        pcadena := substr (pcadena, pos+1);--"208-B,306-B,402-A,403-B"
+        cadenita := substr (pcadena, pos+1);--"208-B,306-B,402-A,403-B"
         --pos := instr(pcadena,',');
-        subcadena := substr(pcadena, 1, pos-1);   
+        subcadena := substr(cadenita, 1, pos-1);   
     
          COUNTER := COUNTER + pos;
          COMMIT;
@@ -97,44 +98,74 @@ AS
 	ASIGNATURAS varchar2(128);
 	TITULACION varchar2(50); 
 
-    CURSOR cursor_alumnos is select * from alumnos_ext;
-    CURSOR cursor_asignaturas IS SELECT * FROM TEMP_ASIGNATURAS;
 
 	BEGIN
 
-	--COUNTER := 1;
-	--COUNTER_ALUMNO := 1;
-    
-	--SELECT * into NUM_ALUMNO FROM (SELECT COUNT(*) FROM alumnos_ext);
+	COUNTER := 1;
+	COUNTER_ALUMNO := 1;
 
-	--WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) LOOP 
-    FOR cada_alumno in cursor_alumnos LOOP 
-    
-		normaliza_asignaturas(cada_alumno.grupos_asignados,SUBSTR(cada_alumno.expediente,1,4));
+	SELECT * into NUM_ALUMNO FROM (SELECT COUNT(*) FROM alumnos_ext);
 
-		--select count(*) into NUM from TEMP_ASIGNATURAS;
+	WHILE(COUNTER_ALUMNO <= NUM_ALUMNO) LOOP 
 
-		FOR cada_asignatura in cursor_asignaturas LOOP
 
-			--select cada_alumno.NEXPEDIENTE into expediente FROM alumnos_ext;
+		select NOMBRE into nombre FROM alumnos_ext
+			WHERE ROWNUM = COUNTER_ALUMNO;
 
-			--select cada_asignatura.codigo into codigoAsig FROM (TEMP_ASIGNATURAS);
+		select APELLIDO1 into Apellido1 FROM alumnos_ext
+			WHERE ROWNUM = COUNTER_ALUMNO;
+
+		select APELLIDO2 into Apellido2 FROM alumnos_ext
+			WHERE ROWNUM = COUNTER_ALUMNO;
+
+
+
+		SELECT SUBSTR(expediente,1,4) INTO TITULACION FROM alumnos_ext
+			WHERE NOMBRE LIKE nombre AND
+				APELLIDO1 LIKE  Apellido1 AND
+				APELLIDO2 LIKE Apellido2;
+
+
+		SELECT GRUPOS_ASIGNADOS  into ASIGNATURAS from alumnos_ext
+			WHERE NOMBRE LIKE nombre AND
+				APELLIDO1 LIKE  Apellido1 AND
+				APELLIDO2 LIKE Apellido2;
+
+		normaliza_asignaturas(ASIGNATURAS,TITULACION);
+
+		select * into NUM from (select count(*) from (TEMP_ASIGNATURAS));
+
+		WHILE (COUNTER <= NUM) LOOP 
+
+			select NEXPEDIENTE into expediente FROM alumnos_ext
+				WHERE NOMBRE LIKE nombre AND
+				APELLIDO1 LIKE  Apellido1 AND
+				APELLIDO2 LIKE Apellido2;
+
+			select * into codigoAsig FROM (TEMP_ASIGNATURAS)
+				WHERE ROWNUM = COUNTER;
 
 			SELECT REFERENCIA into referencia2 FROM ASIGNATURAS
-				WHERE CODIGO LIKE cada_asignatura.codigo;
+				WHERE CODIGO LIKE codigoAsig;
 
-			--SELECT cada_asignatura.GRUPO INTO CURSO FROM TEMP_ASIGNATURAS;
+			SELECT GRUPO INTO CURSO FROM TEMP_ASIGNATURAS
+				WHERE CODIGO LIKE codigoAsig; 
 
-			--SELECT cada_asignatura.grupo_id INTO grupo_id FROM (TEMP_ASIGNATURAS);
-            
-            INSERT INTO ASIGNATURA_MATRICULA VALUES(referencia2, curso_actual() ,cada_alumno.expediente, cada_asignatura.grupo_id );
-        commit;
+			SELECT * INTO grupo_id FROM (TEMP_ASIGNATURAS)
+				WHERE codigo LIKE codigoAsig;
+
+
+
+			COUNTER := COUNTER + 1;
 
 		END LOOP;
 
-		
-        
+		INSERT INTO ASIGNATURA_MATRICULA VALUES(referencia2, curso_actual() ,expediente, grupo_id );
+
+		COUNTER_ALUMNO := COUNTER_ALUMNO + 1;
+
 	END LOOP;
+    COMMIT;
 	 
 END RELLENA_ASIG_MATRICULA;
 /
