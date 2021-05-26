@@ -37,34 +37,62 @@ FOR EACH ROW --No se si esta bien, falta lo de el grupo_id not null (ESTO ESTA S
 END ACTUALIZAR_ALUMNOS;
 /
 
---e (EN DESARROLLO)
+--e, g,h
+create or replace package PK_ASIGNACION_GRUPOS as 
+procedure PR_ASIGNA_ASIGNADOS;
+procedure PR_ASIGNA_INGLES_NUEVO;
+procedure PR_ASIGNA_TARDE_NUEVO;
+end package;
+/
 create or replace package body PK_ASIGNACION_GRUPOS as
 procedure PR_ASIGNA_ASIGNADOS is 
     cursor alumnoCursor is select nuevo_ingreso.documento, alumnosext.documento from nuevo_ingreso inner join alumnosext 
         on nuevo_ingreso.documento = alumnoext.documento;
     cursor asignaturaCursor is select * from temp_asignaturas;
-    pos number;
     pcadena varchar2(200);
     subcadena varchar2(20);
     letra varchar2(1);
-    Acodigo varchar2(5);
     begin
         for al in alumnoCursor loop
-            exec normaliza_asignaturas(al.grupo_asignado, substr(al.expediente,1,4));--llamada al procedimiento de edu
+            normaliza_asignaturas(al.grupo_asignado, substr(al.expediente,1,4));--llamada al procedimiento de edu
             
             for unAsig in asignaturaCursor loop
                 letra := substr(unAsig.grupo_id,4);
                 if letra is null then 
-                    insert into errores values(sysdate, 'No tiene letra del grupo', Acodigo, CURSO_ACTUAL(),null, null,al.expediente, substr(al.expediente,1,4));
-                else 
-                    ALTER TABLE ASIGNATURA_MATRICULA ALTER COLUMN grupo_id (unAsig.grupo_id) 
+                    insert into errores values(sysdate, 'No tiene letra del grupo', unAsig.codigo, CURSO_ACTUAL(),null, null,al.expediente, substr(al.expediente,1,4));
+                else
+                    update  ASIGNATURA_MATRICULA set grupo_id = unAsig.grupo_id 
                         WHERE MATRICULA_EXPEDIENTES_NEXP LIKE al.expediente AND ASIGNATURA_REFERENCIA LIKE 
                             (SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
                 end if;
             end loop;
             
         end loop;
-    end PR_ASIGNA_ASIGNADOS;      
+    end PR_ASIGNA_ASIGNADOS;
+    
+    procedure PR_ASIGNA_INGLES_NUEVO is
+    null
+    --borrar el null y cambiar el cuerpo del procedimiento
+    end PR_ASIGNA_INGLES_NUEVO;
+    
+    --h
+    procedure PR_ASIGNA_TARDE_NUEVO is
+    cursor inglesTarde is select * from nuevo_ingreso;
+    turno varchar2(20);
+    begin
+    for alumno in inglesTarde loop
+        if alumno.asig_ingles is null then
+             select turno_preferente into turno from matricula where EXPEDIENTES_NUM_EXPEDIENTE 
+                    like (select documento from alumnos_ext where nexpediente like alumno.expediente);
+        
+           -- if turno is 'tarde' then
+                
+            --end if;
+            
+        end if;
+    end loop;
+    end PR_ASIGNA_TARDE_NUEVO;
+    
 end PK_ASIGNACION_GRUPOS;
 /
        
@@ -86,6 +114,7 @@ END LETRA_GRUPO_INGLES;
 /
 
 
+    
 
 
 
