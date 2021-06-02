@@ -37,7 +37,7 @@ FOR EACH ROW --No se si esta bien, falta lo de el grupo_id not null (ESTO ESTA S
 END ACTUALIZAR_ALUMNOS;
 /
 
---e, g,h
+--e,g,h
 create or replace package PK_ASIGNACION_GRUPOS as 
 procedure PR_ASIGNA_ASIGNADOS;
 procedure PR_ASIGNA_INGLES_NUEVO;
@@ -71,8 +71,25 @@ procedure PR_ASIGNA_ASIGNADOS is
     end PR_ASIGNA_ASIGNADOS;
     
     procedure PR_ASIGNA_INGLES_NUEVO is
-    null
-    --borrar el null y cambiar el cuerpo del procedimiento
+    declare
+        cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso;
+        var_letra varchar2(4);
+        var_curso number;
+        var_titulacion number;
+        var_asig number;
+        var_refer number;
+    begin 
+        for unalumno in alumnos_nuevos loop
+            if unalumno.asig_ingles is not null then
+                select titulacion_codigo into var_titulacion from expedientes where num_expdiente=unalumno.expediente;
+                var_asig := substr(alumnos_nuevos.asig_ingles,1,3);
+                var_letra := letra_grupo_ingles(var_titulacion,var_asig);
+                var_curso := substr(var_asig,1);
+                select referencia into var_refer from asignaturas where codigo=var_asig;
+                update asignaturas_matricula set grupo_id=var_curso||var_letra where matriculas_expedientes=unalumno.expediente and asignatura_referencia=var_refer;
+            end if;
+        end loop;
+    end;
     end PR_ASIGNA_INGLES_NUEVO;
     
     --h
