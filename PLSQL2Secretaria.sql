@@ -92,23 +92,26 @@ procedure PR_ASIGNA_ASIGNADOS is
     end;
     end PR_ASIGNA_INGLES_NUEVO;
     
-    --h
+    --h (NO ES OBLIGATORIO)
     procedure PR_ASIGNA_TARDE_NUEVO is
     cursor inglesTarde is select * from nuevo_ingreso;
     turno varchar2(20);
+    grupoTarde varchar2(20);
     begin
     for alumno in inglesTarde loop
         if alumno.asig_ingles is null then
              select turno_preferente into turno from matricula where EXPEDIENTES_NUM_EXPEDIENTE 
                     like (select documento from alumnos_ext where nexpediente like alumno.expediente);
         
-           -- if turno is 'tarde' then
-                
-            --end if;
+            if turno = 'tarde' then
+                select id into grupoTarde from grupo where TURNO_MANNANA_TARDE
+                    like turno; --or TURNO_MANNANA_TARDE like 'MAÑANA-TARDE'; (esto puede tener sentido pero no se si esta bien)
+                update ASIGNATURAS_MATRICULA set grupo_id= --terminar esto 
+            end if;
             
         end if;
     end loop;
-    end PR_ASIGNA_TARDE_NUEVO;
+    end;
     
 end PK_ASIGNACION_GRUPOS;
 /
@@ -130,7 +133,25 @@ BEGIN
 END LETRA_GRUPO_INGLES;
 /
 
+--m
+create or replace procedure PR_ASIGNA as 
+begin 
+    PR_ASIGNA_ASIGNADOS;
+    PR_ASIGNA_INGLES_NUEVO;
+    PR_ASIGNA_TARDE_NUEVO;
+    --El resto de procedimientos que hay que llamar son opcionales y no están hechos
+    
+end PR_ASIGNA;
+/    
+--n
+CREATE VIEW V_ASIGNATURAS AS
+SELECT ASIG.TITULACION_CODIGO, AM.MATRICULA_EXPEDIENTES_NEXP, AL.DOCUMENTO, AL.APELLIDO1 ||', '|| AL.NOMBRE "nombre", SUBSTR(AM.GRUPO_ID,3) "curso",
+ASIG.CODIGO, SUBSTR(AM.GRUPO_ID,4) "letra"
+    FROM ASIGNATURA ASIG, ASIGNATURAS_MATRICULA AM, ALUMNOS_EXT AL
+        WHERE ASIG.REFERENCIA = AM.ASIGNATURA_REFERENCIA AND
+        AL.NEXPEDIENTE = AM.MATRICULA_EXPEDIENTES_NEXP;
 
+select * from V_ASIGNATURAS;
     
 
 
