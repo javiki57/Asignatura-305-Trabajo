@@ -21,7 +21,8 @@ CREATE TABLE ERRORES(
 --c
 ALTER TABLE GRUPOS_POR_ASIGNATURA ADD (NUM_ALUMNOS NUMBER(200), NUM_ALUMNOS_REAL NUMBER(200));
 
---d 
+--d
+
 CREATE OR REPLACE TRIGGER ACTUALIZAR_ALUMNOS AFTER INSERT OR UPDATE OR DELETE ON ASIGNATURAS_MATRICULA
 FOR EACH ROW --No se si esta bien, falta lo de el grupo_id not null (ESTO ESTA SOLUCIONADO CREO)
     BEGIN 
@@ -42,7 +43,7 @@ create or replace package PK_ASIGNACION_GRUPOS as
 procedure PR_ASIGNA_ASIGNADOS;
 procedure PR_ASIGNA_INGLES_NUEVO;
 procedure PR_ASIGNA_TARDE_NUEVO;
-end package;
+end PK_ASIGNACION_GRUPOS;
 /
 create or replace package body PK_ASIGNACION_GRUPOS as
 procedure PR_ASIGNA_ASIGNADOS is 
@@ -71,7 +72,6 @@ procedure PR_ASIGNA_ASIGNADOS is
     end PR_ASIGNA_ASIGNADOS;
     
     procedure PR_ASIGNA_INGLES_NUEVO is
-    declare
         cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso;
         var_letra varchar2(4);
         var_curso number;
@@ -89,9 +89,8 @@ procedure PR_ASIGNA_ASIGNADOS is
                 update asignaturas_matricula set grupo_id=var_curso||var_letra where matriculas_expedientes=unalumno.expediente and asignatura_referencia=var_refer;
             end if;
         end loop;
-    end;
     end PR_ASIGNA_INGLES_NUEVO;
-    
+    /*
     --h (NO ES OBLIGATORIO)
     procedure PR_ASIGNA_TARDE_NUEVO is
     cursor inglesTarde is select * from nuevo_ingreso;
@@ -111,7 +110,8 @@ procedure PR_ASIGNA_ASIGNADOS is
             
         end if;
     end loop;
-    end;
+    end PR_ASIGNA_TARDE_NUEVO;
+    */
     
 end PK_ASIGNACION_GRUPOS;
 /
