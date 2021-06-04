@@ -12,18 +12,18 @@ return Curso;
 end CURSO_ACTUAL;
 /
 
+
 --Ejercicio 2
 CREATE OR REPLACE FUNCTION OBTEN_GRUPO_ID 
     (PTitulacion VARCHAR2, PCurso Number, PLetra VARCHAR2) 
     RETURN VARCHAR2 AS
-    VAR_ID VARCHAR2(38);
+    VAR_ID VARCHAR2(10);
 BEGIN
     SELECT G.ID INTO VAR_ID FROM GRUPO G 
         WHERE G.CURSO=PCURSO AND G.LETRA=PLETRA AND G.TITULACION_CODIGO=PTITULACION;
     RETURN VAR_ID;
 END OBTEN_GRUPO_ID;
 /
-
 
 
 --Ejercicio 3
@@ -47,6 +47,7 @@ pos := instr(pcadena,',');--5
 subcadena := substr(pcadena, 1, pos-1);   --"201-A"
     while (COUNTER <= length(pcadena)) loop
          codigo := substr(subcadena,1,3);--"201"
+         --DBMS_OUTPUT.put_line (codigo);
          curso := to_number(substr(subcadena,1,1));--"2" 
          letra := substr(subcadena,5, 1);--"A"
          if letra is not null then
@@ -67,7 +68,7 @@ subcadena := substr(pcadena, 1, pos-1);   --"201-A"
          END LOOP;
 END normaliza_asignaturas;
 /
---EXEC normaliza_asignaturas('207-A,208-,306-B,402-A,403-B');
+--EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
 --EXEC normaliza_asignaturas('105-A,205-B', '1041');
 --select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from dual
 --connect by regexp_substr('207-A,208-,306-B,402-,403-', '[^,]+', 1, level) is not null);
@@ -95,7 +96,7 @@ AS
 
 
             INSERT INTO ASIGNATURAS_MATRICULA VALUES(referencia2, curso_actual(), cada_asignatura.grupo, null, null, cada_alumno.nexpediente );
-        commit;
+            commit;
         END LOOP;
 
     END LOOP;
@@ -103,3 +104,6 @@ AS
 
 END RELLENA_ASIG_MATRICULA;
 /
+
+exec RELLENA_ASIG_MATRICULA();
+
