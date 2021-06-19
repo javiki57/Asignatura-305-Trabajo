@@ -155,36 +155,72 @@ create or replace TRIGGER ACTUALIZAR_ALUMNOS AFTER INSERT OR UPDATE OR DELETE ON
 FOR EACH ROW
     declare
     grupoAux varchar2(5);
+    grupoAntiguo varchar2(5);
     var_grupo varchar2(10);
+    asig_nombre varchar2(100);
+    titulacion number(5);
+    asig_ref varchar2(10);
     BEGIN 
-        select grupo_id into var_grupo from asignaturas_matricula where ASIGNATURA_REFERENCIA=:new.asignatura_referencia;
-        select grupo_id into grupoAux from GRUPO where GRUPO.id = :new.grupo_id;
-        if var_grupo is not null then
+
+        --select grupo_id into var_grupo from asignaturas_matricula where ASIGNATURA_REFERENCIA=:new.asignatura_referencia;
+        --select grupo_id into grupoAux from GRUPO where GRUPO.id = :new.grupo_id;
+        --if var_grupo is not null then
             IF INSERTING THEN
+            	SELECT grupo_id INTO grupoAux FROM GRUPO WHERE ID = NEW.GRUPO_ID;
                 UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
                 if grupoAux is not null then 
-                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 where GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
+	                SELECT NOMBRE INTO asig_nombre FROM ASIGNATURA WHERE REFERENCIA = NEW.ASIGNATURA_REFERENCIA;
+	                SELECT TITULACION_CODIGO INTO titulacion FROM GRUPO WHERE ID =: grupoAux;
+	                SELECT REFERENCIA INTO asig_ref FROM ASIGNATURA WHERE TITULACION_CODIGO =: titulacion AND NOMBRE =: asig_nombre;
+	                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 where  ASIGNATURA_REFERENCIA =: asig_ref AND GRUPO_ID =: grupoAux;
                 end if;
             ELSIF DELETING THEN
-                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS-1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
+            	SELECT grupo_id INTO grupoAux FROM GRUPO WHERE ID = NEW.GRUPO_ID;
+                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS-1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 WHERE GRUPO_ID=:NEW.GRUPO_ID AND ASIGNATURA_REFERENCIA =: NEW.ASIGNATURA_REFERENCIA;
                 if grupoAux is not null then 
-                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
-                end if;
-            ELSE
-                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS-1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 WHERE GRUPO_ID=:OLD.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
-                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
+                	SELECT NOMBRE INTO asig_nombre FROM ASIGNATURA WHERE REFERENCIA = NEW.ASIGNATURA_REFERENCIA;
+	                SELECT TITULACION_CODIGO INTO titulacion FROM GRUPO WHERE ID =: grupoAux;
+	                SELECT REFERENCIA INTO asig_ref FROM ASIGNATURA WHERE TITULACION_CODIGO =: titulacion AND NOMBRE =: asig_nombre;
 
-                if grupoAux is not null then 
-                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 where GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
-                    select grupo_id into grupoAux from GRUPO where GRUPO.id = :old.grupo_id;
-                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
+                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where ASIGNATURA_REFERENCIA =: asig_ref AND GRUPO_ID =: grupoAux;
                 end if;
+            ELSIF UPDATING THEN
+
+            	if :NEW.GRUPO_ID IS NOT NULL THEN
+
+	            	SELECT grupo_id INTO grupoAux FROM GRUPO WHERE ID = NEW.GRUPO_ID;
+	            	SELECT grupo_id INTO grupoAntiguo FROM GRUPO WHERE ID = OLD.GRUPO_ID;
+
+	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS-1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 WHERE GRUPO_ID=:OLD.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
+	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
+
+	                if grupoAux is not null then 
+
+	                	SELECT NOMBRE INTO asig_nombre FROM ASIGNATURA WHERE REFERENCIA = NEW.ASIGNATURA_REFERENCIA;
+	                	SELECT TITULACION_CODIGO INTO titulacion FROM GRUPO WHERE ID =: grupoAux;
+	                	SELECT REFERENCIA INTO asig_ref FROM ASIGNATURA WHERE TITULACION_CODIGO =: titulacion AND NOMBRE =: asig_nombre;
+
+	                    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 where asignatura_referencia = asig_ref AND GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
+	                   -- select grupo_id into grupoAux from GRUPO where GRUPO.id = :old.grupo_id;
+	                   -- UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
+	                end if;
+	            END IF;
+
+	            if grupoAntiguo IS NOT NULL THEN
+
+	            	SELECT NOMBRE INTO asig_nombre FROM ASIGNATURA WHERE REFERENCIA = OLD.ASIGNATURA_REFERENCIA;
+	                SELECT TITULACION_CODIGO INTO titulacion FROM GRUPO WHERE ID =: grupoAntiguo;
+	                SELECT REFERENCIA INTO asig_ref FROM ASIGNATURA WHERE TITULACION_CODIGO =: titulacion AND NOMBRE =: asig_nombre;
+
+	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where asignatura_referencia = asig_ref AND GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
+	            END IF;
+
             END IF;
-        else
-            IF UPDATING THEN
-                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
-            END IF;
-        end if;
+        --else
+          --  IF UPDATING THEN
+            --    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
+            --END IF;
+        --end if;
 END ACTUALIZAR_ALUMNOS;
 / 
 
