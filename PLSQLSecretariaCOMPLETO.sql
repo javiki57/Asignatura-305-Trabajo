@@ -245,7 +245,7 @@ procedure PR_ASIGNA_ASIGNADOS is
             normaliza_asignaturas(al.grupos_asignados, substr(al.expediente,1,4));--llamada al procedimiento de edu
             tieneGrupo := 0;
             for unAsig in asignaturaCursor loop
-                letra := substr(unAsig.grupo_id, unAsig.grupo_id.length - 1, unAsig.grupo_id.length); --substr(unAsig.grupo,4)
+                letra := substr(unAsig.grupo_id, unAsig.grupo_id.length - 1,1); --unAsig.grupo_id.length);
                 if letra is not null then
                     tieneGrupo = 1;
                 end if;
@@ -254,7 +254,7 @@ procedure PR_ASIGNA_ASIGNADOS is
 
             for unAsig in asignaturaCursor loop
                 if tieneGrupo = 1 then
-                    letra := substr(unAsig.grupo,4); -- a lo mejor hay que poner ,5 en los paramertos del substr
+                    letra := substr(unAsig.grupo,4,1);
                     if letra is null then 
                         insert into errores values(sysdate, 'No tiene letra del grupo', unAsig.codigo, CURSO_ACTUAL(),null, null,al.expediente, substr(al.expediente,1,4));
                     else
@@ -286,7 +286,7 @@ procedure PR_ASIGNA_ASIGNADOS is
                 select titulacion_codigo into var_titulacion from expedientes where num_expediente=unalumno.expediente;
                 var_asig := substr(unalumno.asig_ingles,1,3);
                 var_letra := letra_grupo_ingles(var_titulacion,var_asig);
-                var_curso := substr(var_asig,1);
+                var_curso := substr(var_asig,1,1);
                 select referencia into var_refer from asignatura where codigo=var_asig;
                 update asignaturas_matricula set grupo_id=var_curso||var_letra where matricula_expedientes_nexp=unalumno.expediente and asignatura_referencia=var_refer;
             end if;
@@ -319,7 +319,7 @@ BEGIN
     VAR_LETRA := NULL;
     SELECT IDIOMAS_DE_IMPARTICION INTO VAR_IDIOM FROM ASIGNATURA WHERE CODIGO=CASIGNATURA AND TITULACION_CODIGO=CTITULACION;
     IF VAR_IDIOM IS NOT NULL THEN
-        VAR_CURSO := SUBSTR(CASIGNATURA,1);
+        VAR_CURSO := SUBSTR(CASIGNATURA,1,1);
         SELECT LETRA INTO VAR_LETRA FROM GRUPO WHERE CURSO=VAR_CURSO AND TITULACION_CODIGO=CTITULACION AND INGLES='si';
     END IF;
     RETURN VAR_LETRA;
@@ -338,8 +338,8 @@ end PR_ASIGNA;
 --exec PR_ASIGNA();
 --n
 CREATE OR REPLACE VIEW V_ASIGNATURAS AS
-SELECT ASIG.TITULACION_CODIGO, AM.MATRICULA_EXPEDIENTES_NEXP, AL.DOCUMENTO, AL.APELLIDO1 ||', '|| AL.NOMBRE "nombre", SUBSTR(AM.GRUPO_ID,3) "curso",
-ASIG.CODIGO, SUBSTR(AM.GRUPO_ID,4) "letra"
+SELECT ASIG.TITULACION_CODIGO, AM.MATRICULA_EXPEDIENTES_NEXP, AL.DOCUMENTO, AL.APELLIDO1 ||', '|| AL.NOMBRE "nombre", SUBSTR(AM.GRUPO_ID,3,1) "curso",
+ASIG.CODIGO, SUBSTR(AM.GRUPO_ID,4,1) "letra"
     FROM ASIGNATURA ASIG, ASIGNATURAS_MATRICULA AM, ALUMNOS_EXT AL
         WHERE ASIG.REFERENCIA = AM.ASIGNATURA_REFERENCIA AND
         AL.NEXPEDIENTE = AM.MATRICULA_EXPEDIENTES_NEXP;
