@@ -294,16 +294,22 @@ procedure PR_ASIGNA_ASIGNADOS is
     end PR_ASIGNA_INGLES_NUEVO;
 
     --h
-    procedure PR_ASIGNA_TARDE_NUEVO is
-    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null;
+   procedure PR_ASIGNA_TARDE_NUEVO is
+    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente='Tarde';
     grupoTarde varchar2(20);
+    fallo exception;
     begin
     for alumno in inglesTarde loop
-        if alumno.turno_preferente='Tarde' then
+       -- if alumno.turno_preferente='Tarde' then
             select id into grupoTarde from grupo where TURNO_MANNANA_TARDE=alumno.turno_preferente; 
             update ASIGNATURAS_MATRICULA set grupo_id = grupoTarde;
-        end if;
+        --end if;
+        
+        --if (sale el error que queremos controlar) then raise fallo; end if; -- no sabemos que fallo debemos controlar 
     end loop;
+    /*exception
+        when fallo then (lo que tendria que hacer) 
+        */
     end PR_ASIGNA_TARDE_NUEVO;
 
 end PK_ASIGNACION_GRUPOS;
@@ -325,6 +331,14 @@ BEGIN
     RETURN VAR_LETRA;
 END LETRA_GRUPO_INGLES;
 /
+
+--j
+CREATE TABLE ENCUESTA_NUEVA (
+    DOCUMENTO	VARCHAR2(20 BYTE),
+    EXPEDIENTE	VARCHAR2(100 BYTE),
+    ARCHIVO	VARCHAR2(100 BYTE),
+    ASIG_INGLES	VARCHAR2(200 BYTE)
+    );
 
 --m
 create or replace procedure PR_ASIGNA as 
