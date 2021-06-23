@@ -148,7 +148,7 @@ CREATE TABLE ERRORES(
     );
 
 --c
-ALTER TABLE GRUPOS_POR_ASIGNATURA ADD (NUM_ALUMNOS NUMBER DEFAULT(0), NUM_ALUMNOS_REAL NUMBER DEFAULT(0));
+ALTER TABLE GRUPOS_POR_ASIGNATURA ADD (NUM_ALUMNOS NUMBER(38), NUM_ALUMNOS_REAL NUMBER(38));
 
 --d
 create or replace TRIGGER ACTUALIZAR_ALUMNOS AFTER INSERT OR UPDATE OR DELETE ON ASIGNATURAS_MATRICULA
@@ -247,7 +247,7 @@ procedure PR_ASIGNA_ASIGNADOS is
             for unAsig in asignaturaCursor loop
                 letra := substr(unAsig.grupo_id, unAsig.grupo_id.length - 1,1); --unAsig.grupo_id.length);
                 if letra is not null then
-                    tieneGrupo = 1;
+                    tieneGrupo := 1;
                 end if;
 
             end loop;
@@ -280,6 +280,7 @@ procedure PR_ASIGNA_ASIGNADOS is
         var_titulacion number;
         var_asig number;
         var_refer number;
+        fallo exception;
     begin 
         for unalumno in alumnos_nuevos loop
             if unalumno.asig_ingles is not null then
@@ -290,26 +291,31 @@ procedure PR_ASIGNA_ASIGNADOS is
                 select referencia into var_refer from asignatura where codigo=var_asig;
                 update asignaturas_matricula set grupo_id=var_curso||var_letra where matricula_expedientes_nexp=unalumno.expediente and asignatura_referencia=var_refer;
             end if;
+            --if (sale el error que queremos controlar) then raise fallo; end if; -- no sabemos que fallo debemos controlar
         end loop;
+         /*exception
+        when fallo then (lo que tendria que hacer) 
+        */
     end PR_ASIGNA_INGLES_NUEVO;
 
     --h
-   procedure PR_ASIGNA_TARDE_NUEVO is
-    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente='Tarde';
+    procedure PR_ASIGNA_TARDE_NUEVO is
+    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE, M.LISTADO_ASIGNATURAS, M.EXPEDIENTES_NUM_EXPEDIENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente like 'Tarde';
     grupoTarde varchar2(20);
     fallo exception;
     begin
     for alumno in inglesTarde loop
+        contador := 0;
        -- if alumno.turno_preferente='Tarde' then
             select id into grupoTarde from grupo where TURNO_MANNANA_TARDE=alumno.turno_preferente; 
             update ASIGNATURAS_MATRICULA set grupo_id = grupoTarde;
         --end if;
-        
-        --if (sale el error que queremos controlar) then raise fallo; end if; -- no sabemos que fallo debemos controlar 
+            update asignaturas_matricula set grupo_id=grupoTarde where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE;
+        if grupoTarde = null then raise fallo; end if; 
     end loop;
-    /*exception
-        when fallo then (lo que tendria que hacer) 
-        */
+    exception
+        when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de tarde.');
+        
     end PR_ASIGNA_TARDE_NUEVO;
 
 end PK_ASIGNACION_GRUPOS;
@@ -326,7 +332,7 @@ BEGIN
     SELECT IDIOMAS_DE_IMPARTICION INTO VAR_IDIOM FROM ASIGNATURA WHERE CODIGO=CASIGNATURA AND TITULACION_CODIGO=CTITULACION;
     IF VAR_IDIOM IS NOT NULL THEN
         VAR_CURSO := SUBSTR(CASIGNATURA,1,1);
-        SELECT LETRA INTO VAR_LETRA FROM GRUPO WHERE CURSO=VAR_CURSO AND TITULACION_CODIGO=CTITULACION AND INGLES='si';
+        SELECT LETRA INTO VAR_LETRA FROM GRUPO WHERE CURSO=VAR_CURSO AND TITULACION_CODIGO=CTITULACION AND INGLES like 'si';
     END IF;
     RETURN VAR_LETRA;
 END LETRA_GRUPO_INGLES;
