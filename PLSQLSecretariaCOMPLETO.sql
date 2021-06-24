@@ -283,7 +283,7 @@ procedure PR_ASIGNA_ASIGNADOS is
         grupoEspanol varchar2(20);
         grupoIngles varchar2(20);
         contador number(8);
-        asignatura varchar2(20)
+        asignatura varchar2(20);
         fallo exception;
     begin 
         for unalumno in alumnos_nuevos loop
@@ -302,7 +302,7 @@ procedure PR_ASIGNA_ASIGNADOS is
             
             while (contador <= length(cadena)) loop
                 asignatura := substr(cadena, contador, contador+2);
-                SELECT REFERENCIA into var_refer FORM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = asignatura;
+                SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = asignatura;
                 SELECT id into grupoIngles FROM GRUPO WHERE TITULACION = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
                 update asignaturas_matricula set grupo_id=grupoIngles where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
 
@@ -323,7 +323,7 @@ procedure PR_ASIGNA_ASIGNADOS is
     fallo exception;
     begin
     for alumno in inglesTarde loop
-        contador := 0;
+        
        -- if alumno.turno_preferente='Tarde' then
             select id into grupoTarde from grupo where TURNO_MANNANA_TARDE=alumno.turno_preferente; 
             update ASIGNATURAS_MATRICULA set grupo_id = grupoTarde;
