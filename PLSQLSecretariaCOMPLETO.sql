@@ -85,7 +85,7 @@ END normaliza_asignaturas;
 /
 --EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
 --EXEC normaliza_asignaturas('105-A,205-B', '1041');
---select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from dual
+--select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from  dual
 --connect by regexp_substr('207-A,208-,306-B,402-,403-', '[^,]+', 1, level) is not null);
 
 --select regexp_substr('207-A,208-C,306-B,402-D,403-D','[^,]+', 1, level) from dual
@@ -274,28 +274,40 @@ procedure PR_ASIGNA_ASIGNADOS is
     
     --g
     procedure PR_ASIGNA_INGLES_NUEVO is
-        cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso;
+        cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso where asig_ingles is not null;
         var_letra varchar2(4);
         var_curso number;
         var_titulacion number;
         var_asig number;
         var_refer number;
+        grupoIngles varchar2(20);
+        contador number(8);
         fallo exception;
     begin 
         for unalumno in alumnos_nuevos loop
-            if unalumno.asig_ingles is not null then
+        contador := 1;
+       -- SELECT curso INTO var_curso FROM ASIGNATURA WHERE REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4))) 
+        SELECT id INTO grupoIngles FROM GRUPO WHERE sustituye_ingles LIKE 'si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4));
+        update asignaturas_matricula set grupo_id=grupoIngles where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
+          /* -- if unalumno.asig_ingles is not null then
                 select titulacion_codigo into var_titulacion from expedientes where num_expediente=unalumno.expediente;
                 var_asig := substr(unalumno.asig_ingles,1,3);
                 var_letra := letra_grupo_ingles(var_titulacion,var_asig);
                 var_curso := substr(var_asig,1,1);
                 select referencia into var_refer from asignatura where codigo=var_asig;
                 update asignaturas_matricula set grupo_id=var_curso||var_letra where matricula_expedientes_nexp=unalumno.expediente and asignatura_referencia=var_refer;
-            end if;
-            --if (sale el error que queremos controlar) then raise fallo; end if; -- no sabemos que fallo debemos controlar
+            */
+            
+            while (contador <= length(cadena)) loop
+                substr(cadena, contador, contador+2);
+                --metemos el dato donde sea
+                contador := contador +4;
+            end loop;
+            if grupoIngles = null then raise fallo; end if; -- no sabemos que fallo debemos controlar
         end loop;
-         /*exception
-        when fallo then (lo que tendria que hacer) 
-        */
+        exception
+        when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de tarde.');    
+        
     end PR_ASIGNA_INGLES_NUEVO;
 
     --h
