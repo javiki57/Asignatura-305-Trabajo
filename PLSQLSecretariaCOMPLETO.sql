@@ -14,28 +14,28 @@ Pedro Sánchez Machuca
 ---------------------------------------------------------------------------------*/
 
 --Ejercicio 1
-create or replace FUNCTION CURSO_ACTUAL RETURN VARCHAR2 AS Curso varchar2(50);
+create or replace FUNCTION CURSO_ACTUAL RETURN VARCHAR2 AS 
+Curso varchar2(50);
 Anio_Actual varchar2(10);
 begin
-
-Anio_Actual := substr(sysdate, 7);
-if (to_number(substr(sysdate, 4,2)) = 10) and (to_number(substr(sysdate, 1,2)) >= 5) then CURSO_ACTUAL.Curso := (to_number(Anio_Actual)|| '/'|| to_number(Anio_Actual)+1);
-    elsif (to_number(substr(sysdate, 4,2)) > 10) then CURSO_ACTUAL.Curso := (to_number(Anio_Actual)|| '/'|| to_Number(Anio_Actual)+1);
-        else CURSO_ACTUAL.Curso := (to_number(Anio_Actual)-1|| '/'|| to_number(Anio_Actual));
-end if;
-return Curso;
+    Anio_Actual := substr(sysdate, 7);
+    if (to_number(substr(sysdate, 4,2)) = 10) and (to_number(substr(sysdate, 1,2)) >= 5) then 
+        CURSO_ACTUAL.Curso := (to_number(Anio_Actual)|| '/'|| to_number(Anio_Actual)+1);
+    elsif (to_number(substr(sysdate, 4,2)) > 10) then 
+        CURSO_ACTUAL.Curso := (to_number(Anio_Actual)|| '/'|| to_Number(Anio_Actual)+1);
+    else 
+        CURSO_ACTUAL.Curso := (to_number(Anio_Actual)-1|| '/'|| to_number(Anio_Actual));
+    end if;
+    return Curso;
 end CURSO_ACTUAL;
 /
 
 
 --Ejercicio 2
-CREATE OR REPLACE FUNCTION OBTEN_GRUPO_ID 
-    (PTitulacion VARCHAR2, PCurso Number, PLetra VARCHAR2) 
-    RETURN VARCHAR2 AS
-    VAR_ID VARCHAR2(10);
+CREATE OR REPLACE FUNCTION OBTEN_GRUPO_ID (PTitulacion VARCHAR2, PCurso Number, PLetra VARCHAR2) RETURN VARCHAR2 AS
+VAR_ID VARCHAR2(10);
 BEGIN
-    SELECT G.ID INTO VAR_ID FROM GRUPO G 
-        WHERE G.CURSO=PCURSO AND G.LETRA=PLETRA AND G.TITULACION_CODIGO=PTITULACION;
+    SELECT G.ID INTO VAR_ID FROM GRUPO G WHERE G.CURSO=PCURSO AND G.LETRA=PLETRA AND G.TITULACION_CODIGO=PTITULACION;
     RETURN VAR_ID;
 END OBTEN_GRUPO_ID;
 /
@@ -66,10 +66,7 @@ BEGIN
             INSERT INTO TEMP_ASIGNATURAS VALUES(codigo,OBTEN_GRUPO_ID(Titulacion,curso,letra));
         END IF;
         cont := pos + 1;
-        
-    END LOOP;
-
-    
+    END LOOP;    
 END NORMALIZA_ASIGNATURAS;
 /
 --EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
@@ -81,31 +78,19 @@ END NORMALIZA_ASIGNATURAS;
 --connect by regexp_substr('207-A,208C-,306-B,402-D,403-D', '[^,]+', 1, level) is not null;
 
 --Ejercicio 5                                           
-create or replace PROCEDURE  RELLENA_ASIG_MATRICULA
-AS 
-    referencia2 number;
-	CURSOR cursor_alumnos is select * from alumnos_ext;
-    CURSOR cursor_asignaturas IS SELECT * FROM TEMP_ASIGNATURAS;
-
-    BEGIN
+create or replace PROCEDURE  RELLENA_ASIG_MATRICULA AS 
+referencia2 number;
+CURSOR cursor_alumnos is select * from alumnos_ext;
+CURSOR cursor_asignaturas IS SELECT * FROM TEMP_ASIGNATURAS;
+BEGIN
     FOR cada_alumno in cursor_alumnos LOOP 
-
         normaliza_asignaturas(cada_alumno.grupos_asignados,SUBSTR(cada_alumno.nexpediente,1,4));
         FOR cada_asignatura in cursor_asignaturas LOOP
-
-
-
-            SELECT REFERENCIA into referencia2 FROM ASIGNATURA
-                WHERE CODIGO LIKE cada_asignatura.codigo;
-
-
+            SELECT REFERENCIA into referencia2 FROM ASIGNATURA WHERE CODIGO=cada_asignatura.codigo;
             INSERT INTO ASIGNATURAS_MATRICULA VALUES(referencia2, curso_actual(), cada_asignatura.grupo, null, null, cada_alumno.nexpediente );
             commit;
         END LOOP;
-
     END LOOP;
-
-
 END RELLENA_ASIG_MATRICULA;
 /
 
@@ -218,12 +203,12 @@ create or replace package PK_ASIGNACION_GRUPOS as
 procedure PR_ASIGNA_ASIGNADOS;
 procedure PR_ASIGNA_INGLES_NUEVO;
 procedure PR_ASIGNA_TARDE_NUEVO;
+procedure PR_ASIGNA_RESTO_NUEVO;
 end PK_ASIGNACION_GRUPOS;
 /
 create or replace package body PK_ASIGNACION_GRUPOS as
-procedure PR_ASIGNA_ASIGNADOS is 
-    cursor alumnoCursor is select AE.grupos_asignados, NI.expediente from nuevo_ingreso NI inner join alumnos_ext AE on NI.documento = AE.documento
-        where AE.grupos_asignados is not null;
+    procedure PR_ASIGNA_ASIGNADOS is 
+    cursor alumnoCursor is select AE.grupos_asignados, NI.expediente from nuevo_ingreso NI inner join alumnos_ext AE on NI.documento = AE.documento where AE.grupos_asignados is not null;
     cursor asignaturaCursor is select * from temp_asignaturas;
     pcadena varchar2(200);
     subcadena varchar2(20);
@@ -238,9 +223,7 @@ procedure PR_ASIGNA_ASIGNADOS is
                 if letra is not null then
                     tieneGrupo := 1;
                 end if;
-
             end loop;
-
             for unAsig in asignaturaCursor loop
                 if tieneGrupo = 1 then
                     letra := substr(unAsig.grupo,4,1);
@@ -248,16 +231,13 @@ procedure PR_ASIGNA_ASIGNADOS is
                         insert into errores values(sysdate, 'No tiene letra del grupo', unAsig.codigo, CURSO_ACTUAL(),null, null,al.expediente, substr(al.expediente,1,4));
                     else
                         update ASIGNATURAS_MATRICULA set grupo_id = unAsig.grupo 
-                            WHERE MATRICULA_EXPEDIENTES_NEXP LIKE al.expediente AND ASIGNATURA_REFERENCIA LIKE 
-                                (SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
+                            WHERE MATRICULA_EXPEDIENTES_NEXP=al.expediente AND ASIGNATURA_REFERENCIA=(SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
                     end if;
                 else
                     update ASIGNATURAS_MATRICULA set grupo_id = null
-                            WHERE MATRICULA_EXPEDIENTES_NEXP LIKE al.expediente AND ASIGNATURA_REFERENCIA LIKE 
-                                (SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
+                            WHERE MATRICULA_EXPEDIENTES_NEXP=al.expediente AND ASIGNATURA_REFERENCIA=(SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
                 end if;
             end loop;
-
         end loop;
     end PR_ASIGNA_ASIGNADOS;
     
@@ -278,42 +258,31 @@ procedure PR_ASIGNA_ASIGNADOS is
     begin 
 
         for unalumno in alumnos_nuevos loop
-
-             begin
-
-
+            begin
             contador := 1;
-           
-            SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles LIKE 'si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
+            SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles='si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
             --update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
-            update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
-
+            update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)));
             SELECT id into grupoIngles FROM GRUPO WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
-
-         
             normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4)), unalumno.asig_ingles);
             for v_asignatura in (select * from temp_asignaturas) loop
                   SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
-
                   update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND codigo = v_asignatura.codigo);
             end loop;
-            
             if grupoIngles is null then raise fallo; end if; -- no sabemos que fallo debemos controlar
             exception
-             when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de ingles.');  
-
+             when fallo then 
+                DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de ingles.');  
              when others then 
                 codigo_error := sqlcode;
              DBMS_OUTPUT.put_line ('Error desconocido. ' || codigo_error);
             end;  
         end loop;
-        
-        
     end PR_ASIGNA_INGLES_NUEVO;
 
     --h
     procedure PR_ASIGNA_TARDE_NUEVO is
-    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE, M.LISTADO_ASIGNATURAS, M.EXPEDIENTES_NUM_EXPEDIENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente like 'Tarde';
+    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE, M.LISTADO_ASIGNATURAS, M.EXPEDIENTES_NUM_EXPEDIENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente='Tarde';
     grupoTarde varchar2(20);
     fallo exception;
     begin
@@ -331,9 +300,30 @@ procedure PR_ASIGNA_ASIGNADOS is
         
     end PR_ASIGNA_TARDE_NUEVO;
 
+    --i
+    procedure PR_ASIGNA_RESTO_NUEVO is
+    cursor nuevoAlumno is select * from nuevo_ingreso NI, matricula M where NI.ASIG_INGLES is null AND M.TURNO_PREFERENTE='Tarde' order by M.fecha_de_matricula asc;
+    var_grupo VARCHAR2(10);
+    plazas NUMBER;
+    cont NUMBER;
+    begin
+        select id into var_grupo from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null;
+        cont := 1;
+        for unAlumno in nuevoAlumno loop
+            select plazas_nuevo_ingreso into plazas from grupo where id=var_grupo;
+            if cont<plazas then
+                update asignaturas_matricula set grupo_id=var_grupo where unAlumno.curso_academico=MATRICULA_CURSO_ACADEMICO and unAlumno.expediente=MATRICULA_EXPEDIENTES_NEXP;
+                cont := cont+1;
+            else
+                select id into var_grupo from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null and id!=var_grupo;
+                update asignaturas_matricula set grupo_id=var_grupo where unAlumno.curso_academico=MATRICULA_CURSO_ACADEMICO and unAlumno.expediente=MATRICULA_EXPEDIENTES_NEXP;
+                cont := 2;
+            end if;
+        end loop;
+    end PR_ASIGNA_RESTO_NUEVO;
 end PK_ASIGNACION_GRUPOS;
-/
-       
+/ 
+
 -- f
 create or replace FUNCTION LETRA_GRUPO_INGLES (CTITULACION NUMBER,CASIGNATURA NUMBER) 
 RETURN VARCHAR2 AS
@@ -346,7 +336,7 @@ BEGIN
     IF VAR_IDIOM IS NOT NULL THEN
         VAR_CURSO := SUBSTR(CASIGNATURA,1,1);
         SELECT LETRA INTO VAR_LETRA FROM GRUPO WHERE CURSO=VAR_CURSO AND TITULACION_CODIGO=CTITULACION AND INGLES like 'si';
-    else 
+    ELSE 
         VAR_LETRA := 'NULL';
     END IF;
     RETURN VAR_LETRA;
@@ -373,10 +363,7 @@ end PR_ASIGNA;
 --exec PR_ASIGNA();
 --n
 CREATE OR REPLACE VIEW V_ASIGNATURAS AS
-SELECT ASIG.TITULACION_CODIGO, AM.MATRICULA_EXPEDIENTES_NEXP, AL.DOCUMENTO, AL.APELLIDO1 ||', '|| AL.NOMBRE "nombre", SUBSTR(AM.GRUPO_ID,3,1) "curso",
-ASIG.CODIGO, SUBSTR(AM.GRUPO_ID,4,1) "letra"
-    FROM ASIGNATURA ASIG, ASIGNATURAS_MATRICULA AM, ALUMNOS_EXT AL
-        WHERE ASIG.REFERENCIA = AM.ASIGNATURA_REFERENCIA AND
-        AL.NEXPEDIENTE = AM.MATRICULA_EXPEDIENTES_NEXP;
+SELECT ASIG.TITULACION_CODIGO, AM.MATRICULA_EXPEDIENTES_NEXP, AL.DOCUMENTO, AL.APELLIDO1 ||', '|| AL.NOMBRE "NOMBRE", SUBSTR(AM.GRUPO_ID,3,1) "CURSO", ASIG.CODIGO, SUBSTR(AM.GRUPO_ID,4,1) "LETRA"
+    FROM ASIGNATURA ASIG, ASIGNATURAS_MATRICULA AM, ALUMNOS_EXT AL WHERE ASIG.REFERENCIA = AM.ASIGNATURA_REFERENCIA AND AL.NEXPEDIENTE = AM.MATRICULA_EXPEDIENTES_NEXP;
 
 select * from V_ASIGNATURAS;
