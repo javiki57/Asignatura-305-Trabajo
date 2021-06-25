@@ -234,7 +234,7 @@ procedure PR_ASIGNA_ASIGNADOS is
             normaliza_asignaturas(al.grupos_asignados, substr(al.expediente,1,4));--llamada al procedimiento de edu
             tieneGrupo := 0;
             for unAsig in asignaturaCursor loop
-                letra := substr(unAsig.grupo_id, unAsig.grupo_id.length - 1,1); --unAsig.grupo_id.length);
+                letra := substr(unAsig.grupo, length(unAsig.grupo) - 1,1); --unAsig.grupo_id.length);
                 if letra is not null then
                     tieneGrupo := 1;
                 end if;
@@ -285,16 +285,17 @@ procedure PR_ASIGNA_ASIGNADOS is
             contador := 1;
            
             SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles LIKE 'si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
-            update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
+            --update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
+            update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
 
-            SELECT id into grupoIngles FROM GRUPO WHERE TITULACION = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
+            SELECT id into grupoIngles FROM GRUPO WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
 
          
-            normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4))), unalumno.asig_ingles);
+            normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4)), unalumno.asig_ingles);
             for v_asignatura in (select * from temp_asignaturas) loop
                   SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
 
-                  update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4))) AND codigo = v_asignatura.codigo ;
+                  update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND codigo = v_asignatura.codigo);
             end loop;
             
             if grupoIngles is null then raise fallo; end if; -- no sabemos que fallo debemos controlar
