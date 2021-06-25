@@ -54,7 +54,7 @@ letra VARCHAR(1);
 curso NUMBER;
 BEGIN
     cont := 1;
-    WHILE cont<=LENGTH(pcadena) LOOP
+    WHILE cont<=LENGTH(pcadena) LOOP--esto se queda pillado pero no termino de ver la solucion, creo quw se deberia modificar la subcadena o la posicion de la coma de alguna manera pero no termino de ver como hacerlo bien 
         pos := INSTR(pcadena,',');
         subcadena := SUBSTR(pcadena,1,pos-1);
         codigo := TO_NUMBER(SUBSTR(subcadena,1,3));
@@ -285,18 +285,23 @@ create or replace package body PK_ASIGNACION_GRUPOS as
     cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE, M.LISTADO_ASIGNATURAS, M.EXPEDIENTES_NUM_EXPEDIENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente='Tarde';
     grupoTarde varchar2(20);
     fallo exception;
+    codigo_error number;
     begin
     for alumno in inglesTarde loop
-        
+        begin
        -- if alumno.turno_preferente='Tarde' then
             select id into grupoTarde from grupo where TURNO_MANNANA_TARDE=alumno.turno_preferente; 
             update ASIGNATURAS_MATRICULA set grupo_id = grupoTarde;
         --end if;
             update asignaturas_matricula set grupo_id=grupoTarde where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE;
-        if grupoTarde = null then raise fallo; end if; 
+            if grupoTarde = null then raise fallo; end if; 
+        exception
+            when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de tarde.');
+            when others then 
+                codigo_error := sqlcode;
+             DBMS_OUTPUT.put_line ('Error desconocido. ' || codigo_error);
+            end;  
     end loop;
-    exception
-        when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de tarde.');
         
     end PR_ASIGNA_TARDE_NUEVO;
 
@@ -357,6 +362,7 @@ begin
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_ASIGNADOS;
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_INGLES_NUEVO;
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_TARDE_NUEVO;
+    PK_ASIGNACION_GRUPOS.PR_ASIGNA_RESTO_NUEVO;
 end PR_ASIGNA;
 /    
 
