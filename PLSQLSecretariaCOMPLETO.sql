@@ -52,24 +52,34 @@ subcadena VARCHAR2(5);
 codigo NUMBER;
 letra VARCHAR(1);
 curso NUMBER;
+cadena_restada varchar2(100);
 BEGIN
     cont := 1;
+    cadena_restada := pcadena;
+     
     WHILE cont<=LENGTH(pcadena) LOOP--esto se queda pillado pero no termino de ver la solucion, creo quw se deberia modificar la subcadena o la posicion de la coma de alguna manera pero no termino de ver como hacerlo bien 
-        pos := INSTR(pcadena,',');
-        subcadena := SUBSTR(pcadena,1,pos-1);
+         pos := INSTR(cadena_restada,',');
+         if pos = 0 then
+            subcadena := SUBSTR(cadena_restada,1,length(cadena_restada));
+            letra := SUBSTR(subcadena,length(cadena_restada),1);
+        else
+            subcadena := SUBSTR(cadena_restada,1,pos-1);
+            letra := SUBSTR(subcadena,pos-1,1);
+        end if;
         codigo := TO_NUMBER(SUBSTR(subcadena,1,3));
-        letra := SUBSTR(subcadena,pos-1,1);
         IF LETRA='-' THEN
             INSERT INTO TEMP_ASIGNATURAS VALUES(codigo,null);
         ELSE
             curso := TO_NUMBER(SUBSTR(subcadena,1,1));
             INSERT INTO TEMP_ASIGNATURAS VALUES(codigo,OBTEN_GRUPO_ID(Titulacion,curso,letra));
         END IF;
-        cont := pos + 1;
+        cont := cont + pos + 1;
+        cadena_restada := substr(cadena_restada,pos+1, LENGTH(cadena_restada)- (pos));
+        
     END LOOP;    
 END NORMALIZA_ASIGNATURAS;
 /
---EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
+EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
 --EXEC normaliza_asignaturas('105-A,205-B', '1041');
 --select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from  dual
 --connect by regexp_substr('207-A,208-,306-B,402-,403-', '[^,]+', 1, level) is not null);
@@ -289,10 +299,9 @@ create or replace package body PK_ASIGNACION_GRUPOS as
     begin
     for alumno in inglesTarde loop
         begin
-       -- if alumno.turno_preferente='Tarde' then
             select id into grupoTarde from grupo where TURNO_MANNANA_TARDE=alumno.turno_preferente; 
             update ASIGNATURAS_MATRICULA set grupo_id = grupoTarde;
-        --end if;
+            
             update asignaturas_matricula set grupo_id=grupoTarde where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE;
             if grupoTarde = null then raise fallo; end if; 
         exception
@@ -326,6 +335,59 @@ create or replace package body PK_ASIGNACION_GRUPOS as
             end if;
         end loop;
     end PR_ASIGNA_RESTO_NUEVO;
+    
+    --k
+   procedure PR_ASIGNA_INGLES_ANTIGUO is
+        cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso where asig_ingles is not null;
+        var_curso number;
+        var_refer number;
+        grupoEspanol varchar2(20);
+        grupoIngles varchar2(20);
+        contador number(8);
+        asignatura varchar2(20);
+        fallo exception;
+        codigo_error number;
+        encontrado1 number;
+        encontrado2 number;
+    begin 
+
+        for unalumno in alumnos_nuevos loop
+            begin
+                encontrado1:=0;
+                encontrado2:=0;
+                contador := 1;
+                while((contador<=length(unalumno.asig_ingles)) or (encontrado1 = 1 and encontrado2=1)) loop
+                    --104,105,103
+                    if (encontrado1=0 and substr(unalumno.asig_ingles, contador,1)='1') then
+                        SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles='si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
+                        update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)));
+                        SELECT id into grupoIngles FROM GRUPO WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
+                        encontrado1:=1;
+                    end if;
+                    if (encontrado2=0 and substr(unalumno.asig_ingles, contador,1)='2') then
+                        SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles='si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 2;
+                        update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 2 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)));
+                        SELECT id into grupoIngles FROM GRUPO WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 2 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
+                        encontrado2:=2;
+                    end if;
+                    contador := contador + 4;
+                end loop;
+
+                normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4)), unalumno.asig_ingles);
+            for v_asignatura in (select * from temp_asignaturas) loop
+                  SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
+                  update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND codigo = v_asignatura.codigo);
+            end loop;
+            if grupoIngles is null then raise fallo; end if; -- no sabemos que fallo debemos controlar
+            exception
+             when fallo then 
+                DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de ingles.');  
+             when others then 
+                codigo_error := sqlcode;
+             DBMS_OUTPUT.put_line ('Error desconocido. ' || codigo_error);
+            end;  
+        end loop;
+    end PR_ASIGNA_INGLES_ANTIGUO;
 end PK_ASIGNACION_GRUPOS;
 / 
 
