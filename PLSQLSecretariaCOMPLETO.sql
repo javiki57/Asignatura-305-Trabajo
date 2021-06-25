@@ -45,43 +45,32 @@ END OBTEN_GRUPO_ID;
 CREATE GLOBAL TEMPORARY TABLE "SECRETARIA"."TEMP_ASIGNATURAS"("CODIGO" NUMBER, GRUPO VARCHAR2(10)) ON COMMIT DELETE ROWS ;
   
 --Ejercicio 4
-create or replace procedure normaliza_asignaturas (pcadena varchar2, Titulacion varchar2 default null) 
-AS
-codigo varchar2(30);
-letra varchar2(30);
-id_codigo varchar2(30);
-id_grupo varchar2(30); 
-COUNTER number; 
-curso number;
-pos number;
-cadenita varchar2(100);
-subcadena varchar2(20);
+CREATE OR REPLACE PROCEDURE NORMALIZA_ASIGNATURAS(pcadena VARCHAR2, Titulacion VARCHAR2 DEFAULT NULL) AS
+cont NUMBER;
+pos NUMBER;
+subcadena VARCHAR2(5);
+codigo NUMBER;
+letra VARCHAR(1);
+curso NUMBER;
 BEGIN
-COUNTER := 0;
-pos := instr(pcadena,',');--5
-subcadena := substr(pcadena, 1, pos-1);   --"201-A"
-    while (COUNTER <= length(pcadena)) loop
-         codigo := substr(subcadena,1,3);--"201"
-         --DBMS_OUTPUT.put_line (codigo);
-         curso := to_number(substr(subcadena,1,1));--"2" 
-         letra := substr(subcadena,5, 1);--"A"
-         if letra is not null then
-         id_grupo := OBTEN_GRUPO_ID(Titulacion, curso, letra);
-            insert into "TEMP_ASIGNATURAS" values (to_number(codigo), id_grupo);
-         else 
-            insert into "TEMP_ASIGNATURAS" values (to_number(codigo), null);
-        end if;
-        --subcad|
-        --|.....|(                     )
-        --"207-A,208-B,306-B,402-A,403-B"
-        cadenita := substr (pcadena, pos+1);--"208-B,306-B,402-A,403-B"
-        pos := instr(cadenita,',');
-        subcadena := substr(cadenita, 1, pos-1);   
+    cont := 1;
+    WHILE cont<=LENGTH(pcadena) LOOP
+        pos := INSTR(pcadena,',');
+        subcadena := SUBSTR(pcadena,1,pos-1);
+        codigo := TO_NUMBER(SUBSTR(subcadena,1,3));
+        letra := SUBSTR(subcadena,pos-1,1);
+        IF LETRA='-' THEN
+            INSERT INTO TEMP_ASIGNATURAS VALUES(codigo,null);
+        ELSE
+            curso := TO_NUMBER(SUBSTR(subcadena,1,1));
+            INSERT INTO TEMP_ASIGNATURAS VALUES(codigo,OBTEN_GRUPO_ID(Titulacion,curso,letra));
+        END IF;
+        cont := pos + 1;
+        
+    END LOOP;
 
-         COUNTER := COUNTER + pos;
-         COMMIT;
-         END LOOP;
-END normaliza_asignaturas;
+    
+END NORMALIZA_ASIGNATURAS;
 /
 --EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
 --EXEC normaliza_asignaturas('105-A,205-B', '1041');
@@ -285,34 +274,39 @@ procedure PR_ASIGNA_ASIGNADOS is
         contador number(8);
         asignatura varchar2(20);
         fallo exception;
+        codigo_error number;
     begin 
-        for unalumno in alumnos_nuevos loop
-        contador := 1;
-       -- SELECT curso INTO var_curso FROM ASIGNATURA WHERE REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4))) 
-        SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles LIKE 'si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
-        update asignaturas_matricula set grupo_id=grupoEspanol where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
-          /* -- if unalumno.asig_ingles is not null then
-                select titulacion_codigo into var_titulacion from expedientes where num_expediente=unalumno.expediente;
-                var_asig := substr(unalumno.asig_ingles,1,3);
-                var_letra := letra_grupo_ingles(var_titulacion,var_asig);
-                var_curso := substr(var_asig,1,1);
-                select referencia into var_refer from asignatura where codigo=var_asig;
-                update asignaturas_matricula set grupo_id=var_curso||var_letra where matricula_expedientes_nexp=unalumno.expediente and asignatura_referencia=var_refer;
-            */
-            
-            while (contador <= length(cadena)) loop
-                asignatura := substr(cadena, contador, contador+2);
-                SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = asignatura;
-                SELECT id into grupoIngles FROM GRUPO WHERE TITULACION = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
-                update asignaturas_matricula set grupo_id=grupoIngles where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
 
-                --metemos el dato donde sea
-                contador := contador +4;
+        for unalumno in alumnos_nuevos loop
+
+             begin
+
+
+            contador := 1;
+           
+            SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles LIKE 'si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
+            update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
+
+            SELECT id into grupoIngles FROM GRUPO WHERE TITULACION = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
+
+         
+            normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4))), unalumno.asig_ingles);
+            for v_asignatura in (select * from temp_asignaturas) loop
+                  SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
+
+                  update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4))) AND codigo = v_asignatura.codigo ;
             end loop;
-            if grupoIngles = null then raise fallo; end if; -- no sabemos que fallo debemos controlar
+            
+            if grupoIngles is null then raise fallo; end if; -- no sabemos que fallo debemos controlar
+            exception
+             when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de ingles.');  
+
+             when others then 
+                codigo_error := sqlcode;
+             DBMS_OUTPUT.put_line ('Error desconocido. ' || codigo_error);
+            end;  
         end loop;
-        exception
-        when fallo then DBMS_OUTPUT.put_line ('ERROR: No se ha encontrado grupo de tarde.');    
+        
         
     end PR_ASIGNA_INGLES_NUEVO;
 
