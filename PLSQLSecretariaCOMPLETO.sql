@@ -79,7 +79,7 @@ BEGIN
     END LOOP;    
 END NORMALIZA_ASIGNATURAS;
 /
-EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
+--EXEC normaliza_asignaturas('101-A,102-A,105-,202-A,205-A', 1041);
 --EXEC normaliza_asignaturas('105-A,205-B', '1041');
 --select count(*) from (select regexp_substr('207-A,208-,306-B,402-,403-','[^,]+', 1, level) from  dual
 --connect by regexp_substr('207-A,208-,306-B,402-,403-', '[^,]+', 1, level) is not null);
@@ -94,7 +94,7 @@ CURSOR cursor_alumnos is select * from alumnos_ext;
 CURSOR cursor_asignaturas IS SELECT * FROM TEMP_ASIGNATURAS;
 BEGIN
     FOR cada_alumno in cursor_alumnos LOOP 
-        normaliza_asignaturas(cada_alumno.grupos_asignados,SUBSTR(cada_alumno.nexpediente,1,4));
+        normaliza_asignaturas(cada_alumno.grupos_asignados,to_number(SUBSTR(cada_alumno.nexpediente,1,4)));
         FOR cada_asignatura in cursor_asignaturas LOOP
             SELECT REFERENCIA into referencia2 FROM ASIGNATURA WHERE CODIGO=cada_asignatura.codigo;
             INSERT INTO ASIGNATURAS_MATRICULA VALUES(referencia2, curso_actual(), cada_asignatura.grupo, null, null, cada_alumno.nexpediente );
@@ -111,7 +111,7 @@ END RELLENA_ASIG_MATRICULA;
 --------------------------------SEGUNDA PARTE-----------------------------------
 --------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------*/
-
+--a
 CREATE TABLE NUEVO_INGRESO (
     DOCUMENTO	VARCHAR2(20 BYTE),
     EXPEDIENTE	VARCHAR2(100 BYTE),
@@ -214,6 +214,8 @@ procedure PR_ASIGNA_ASIGNADOS;
 procedure PR_ASIGNA_INGLES_NUEVO;
 procedure PR_ASIGNA_TARDE_NUEVO;
 procedure PR_ASIGNA_RESTO_NUEVO;
+procedure PR_ASIGNA_INGLES_ANTIGUO;
+procedure PR_ASIGNA_RESTO_ANTIGUO;
 end PK_ASIGNACION_GRUPOS;
 /
 create or replace package body PK_ASIGNACION_GRUPOS as
@@ -238,14 +240,14 @@ create or replace package body PK_ASIGNACION_GRUPOS as
                 if tieneGrupo = 1 then
                     letra := substr(unAsig.grupo,4,1);
                     if letra is null then 
-                        insert into errores values(sysdate, 'No tiene letra del grupo', unAsig.codigo, CURSO_ACTUAL(),null, null,al.expediente, substr(al.expediente,1,4));
+                        insert into errores values(sysdate, 'No tiene letra del grupo', unAsig.codigo, CURSO_ACTUAL(),null, null,al.expediente, to_number(substr(al.expediente,1,4)));
                     else
                         update ASIGNATURAS_MATRICULA set grupo_id = unAsig.grupo 
-                            WHERE MATRICULA_EXPEDIENTES_NEXP=al.expediente AND ASIGNATURA_REFERENCIA=(SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
+                            WHERE MATRICULA_EXPEDIENTES_NEXP=al.expediente AND ASIGNATURA_REFERENCIA=(SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO = unAsig.codigo and titulacion_codigo = to_number(substr(al.expediente,1,4)));
                     end if;
                 else
                     update ASIGNATURAS_MATRICULA set grupo_id = null
-                            WHERE MATRICULA_EXPEDIENTES_NEXP=al.expediente AND ASIGNATURA_REFERENCIA=(SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO LIKE unAsig.codigo);
+                            WHERE MATRICULA_EXPEDIENTES_NEXP=al.expediente AND ASIGNATURA_REFERENCIA=(SELECT REFERENCIA FROM ASIGNATURA WHERE CODIGO = unAsig.codigo and titulacion_codigo = to_number(substr(al.expediente,1,4)));
                 end if;
             end loop;
         end loop;
@@ -274,7 +276,7 @@ create or replace package body PK_ASIGNACION_GRUPOS as
             --update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTES_NUM_EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)))  ;
             update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)));
             SELECT id into grupoIngles FROM GRUPO WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), asignatura);
-            normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4)), unalumno.asig_ingles);
+            normaliza_asignaturas(unalumno.asig_ingles, to_number(substr(unalumno.expediente,1,4)));
             for v_asignatura in (select * from temp_asignaturas) loop
                   SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
                   update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND codigo = v_asignatura.codigo);
@@ -315,23 +317,35 @@ create or replace package body PK_ASIGNACION_GRUPOS as
     end PR_ASIGNA_TARDE_NUEVO;
 
     --i
-    procedure PR_ASIGNA_RESTO_NUEVO is
-    cursor nuevoAlumno is select * from nuevo_ingreso NI, matricula M where NI.ASIG_INGLES is null AND M.TURNO_PREFERENTE='Tarde' order by M.fecha_de_matricula asc;
+   procedure PR_ASIGNA_RESTO_NUEVO is
+    cursor nuevoAlumno is select * from nuevo_ingreso NI, matricula M where NI.ASIG_INGLES is null AND M.TURNO_PREFERENTE != 'Tarde' order by M.fecha_de_matricula asc;
     var_grupo VARCHAR2(10);
+    var_g2 VARCHAR2(10);
     plazas NUMBER;
-    cont NUMBER;
+    plazas_g2 NUMBER;
+    alumnos_g1 number;
+    alumnos_g2 number;
+    grupoA number(1);
     begin
         select id into var_grupo from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null;
-        cont := 1;
+        select id into var_g2 from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null and id!=var_grupo;
+       
+        grupoA := 1;
+        SELECT COUNT(*) into alumnos_g1 FROM asignaturas_matricula WHERE grupo_id = var_grupo;
+        SELECT COUNT(*) into alumnos_g2 FROM asignaturas_matricula WHERE grupo_id = var_grupo;
+        select plazas_nuevo_ingreso into plazas from grupo where id=var_grupo;
+        select plazas_nuevo_ingreso into plazas_g2 from grupo where id=var_g2;
         for unAlumno in nuevoAlumno loop
-            select plazas_nuevo_ingreso into plazas from grupo where id=var_grupo;
-            if cont<plazas then
+            
+            if (alumnos_g1<plazas  AND grupoA = 1) OR (alumnos_g2 >= plazas_g2) then
                 update asignaturas_matricula set grupo_id=var_grupo where unAlumno.curso_academico=MATRICULA_CURSO_ACADEMICO and unAlumno.expediente=MATRICULA_EXPEDIENTES_NEXP;
-                cont := cont+1;
-            else
-                select id into var_grupo from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null and id!=var_grupo;
+                alumnos_g1 := alumnos_g1+1;
+                grupoA := 0;
+            elsif alumnos_g2 <plazas_g2 then
+                
                 update asignaturas_matricula set grupo_id=var_grupo where unAlumno.curso_academico=MATRICULA_CURSO_ACADEMICO and unAlumno.expediente=MATRICULA_EXPEDIENTES_NEXP;
-                cont := 2;
+                alumnos_g2 := alumnos_g2 + 1;
+                grupoA := 1;
             end if;
         end loop;
     end PR_ASIGNA_RESTO_NUEVO;
@@ -373,7 +387,7 @@ create or replace package body PK_ASIGNACION_GRUPOS as
                     contador := contador + 4;
                 end loop;
 
-                normaliza_asignaturas(to_number(substr(unalumno.expediente,1,4)), unalumno.asig_ingles);
+                normaliza_asignaturas(unalumno.asig_ingles, to_number(substr(unalumno.expediente,1,4)));
             for v_asignatura in (select * from temp_asignaturas) loop
                   SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
                   update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND codigo = v_asignatura.codigo);
@@ -388,6 +402,20 @@ create or replace package body PK_ASIGNACION_GRUPOS as
             end;  
         end loop;
     end PR_ASIGNA_INGLES_ANTIGUO;
+--l
+    procedure PR_ASIGNA_RESTO_ANTIGUO is 
+        --cursor alumAntiguos is select * from asignaturas_matricula where grupo_id is null and matricula_expedientes_nexp not in (select expediente from errores);
+        cursor alumAntiguos is select en.expediente, en.preferencias from encuesta_nueva en join asignaturas_matricula AM on en.expediente = am.matricula_expedientes_nexp where AM.grupo_id is null and en.expediente not in (select expediente from errores);
+        begin 
+            for alumno in alumAntiguos loop
+                normaliza_asignaturas(alumno.preferencias, to_number(substr(alumno.expediente,1,4)));
+                for v_asignatura in (select * from temp_asignaturas) loop
+                    update asignaturas_matricula set grupo_id = v_asignatura.grupo where asignatura_referencia in (select referencia from asignatura 
+                        where codigo = v_asignatura.codigo and titulacion_codigo = to_number(substr(alumno.expediente,1,4)));
+                end loop;
+            end loop;
+    end PR_ASIGNA_RESTO_ANTIGUO;
+    
 end PK_ASIGNACION_GRUPOS;
 / 
 
@@ -421,10 +449,14 @@ CREATE TABLE ENCUESTA_NUEVA (
 --m
 create or replace procedure PR_ASIGNA as 
 begin 
+    
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_ASIGNADOS;
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_INGLES_NUEVO;
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_TARDE_NUEVO;
     PK_ASIGNACION_GRUPOS.PR_ASIGNA_RESTO_NUEVO;
+    PK_ASIGNACION_GRUPOS.PR_ASIGNA_INGLES_ANTIGUO;
+    PK_ASIGNACION_GRUPOS.PR_ASIGNA_RESTO_ANTIGUO;
+    
 end PR_ASIGNA;
 /    
 
