@@ -12,7 +12,7 @@ Pedro Sánchez Machuca
 ------------------------------PRIMERA PARTE--------------------------------------
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------*/
-
+SET serveroutput ON;
 --Ejercicio 1
 create or replace FUNCTION CURSO_ACTUAL RETURN VARCHAR2 AS 
 Curso varchar2(50);
@@ -264,7 +264,7 @@ create or replace package body PK_ASIGNACION_GRUPOS as
     end PR_ASIGNA_ASIGNADOS;
     
     --g
-  procedure PR_ASIGNA_INGLES_NUEVO is
+   procedure PR_ASIGNA_INGLES_NUEVO is
         cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso where asig_ingles is not null;
         var_letra varchar2(4);
         var_curso number;
@@ -286,7 +286,6 @@ create or replace package body PK_ASIGNACION_GRUPOS as
             SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles='si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
             update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)));
 
-            --NO HAY NINGUN GRUPO EN LA LISTA DE LAS ASIGNATURAS DE INGLES ASI QUE NO PODEMOS LLAMAR A NORMALIZA_ASIGNATURAS
             normaliza_asignaturas(unalumno.asig_ingles, to_number(substr(unalumno.expediente,1,4)));
             for v_asignatura in (select * from temp_asignaturas) loop  
            
@@ -307,19 +306,16 @@ create or replace package body PK_ASIGNACION_GRUPOS as
         end loop;
     end PR_ASIGNA_INGLES_NUEVO;
 
-
-
     --h
     procedure PR_ASIGNA_TARDE_NUEVO is
-    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE, M.LISTADO_ASIGNATURAS, M.EXPEDIENTES_NUM_EXPEDIENTE from nuevo_ingreso NI, matricula M where ASIG_INGLES is null and M.turno_preferente='Tarde';
+    cursor inglesTarde is select NI.asig_ingles, M.TURNO_PREFERENTE, M.EXPEDIENTES_NUM_EXPEDIENTE from nuevo_ingreso NI join matricula M on NI.EXPEDIENTE = M.expedientes_num_expediente where NI.ASIG_INGLES is null and M.turno_preferente='Tarde';
     grupoTarde varchar2(20);
     fallo exception;
     codigo_error number;
     begin
     for alumno in inglesTarde loop
         begin
-            select id into grupoTarde from grupo where TURNO_MANNANA_TARDE=alumno.turno_preferente; 
-            update ASIGNATURAS_MATRICULA set grupo_id = grupoTarde;
+            select id into grupoTarde from grupo where TURNO_MANNANA_TARDE= 'TARDE' and titulacion_codigo = to_number(substr(alumno.expedientes_num_expediente,1,4)) and curso = 1; 
             
             update asignaturas_matricula set grupo_id=grupoTarde where matricula_expedientes_nexp = alumno.EXPEDIENTES_NUM_EXPEDIENTE;
             if grupoTarde = null then raise fallo; end if; 
@@ -335,7 +331,7 @@ create or replace package body PK_ASIGNACION_GRUPOS as
 
     --i
    procedure PR_ASIGNA_RESTO_NUEVO is
-    cursor nuevoAlumno is select * from nuevo_ingreso NI, matricula M where NI.ASIG_INGLES is null AND M.TURNO_PREFERENTE != 'Tarde' order by M.fecha_de_matricula asc;
+    cursor nuevoAlumno is select M.*, NI.* from nuevo_ingreso NI, matricula M where NI.ASIG_INGLES is null AND M.TURNO_PREFERENTE != 'Tarde' order by M.fecha_de_matricula asc;
     var_grupo VARCHAR2(10);
     var_g2 VARCHAR2(10);
     plazas NUMBER;
@@ -344,8 +340,9 @@ create or replace package body PK_ASIGNACION_GRUPOS as
     alumnos_g2 number;
     grupoA number(1);
     begin
-        select id into var_grupo from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null;
-        select id into var_g2 from grupo where curso=1 and turno_mannana_tarde!='Tarde' and ingles='no' and plazas_nuevo_ingreso is not null and id!=var_grupo;
+        select id into var_grupo from grupo where curso=1 and turno_mannana_tarde!='TARDE' and ingles='no' and plazas_nuevo_ingreso is not null;
+        dbms_output.put_line(var_grupo);
+        select id into var_g2 from grupo where curso=1 and turno_mannana_tarde!='TARDE' and ingles='no' and plazas_nuevo_ingreso is not null and id!=var_grupo;
        
         grupoA := 1;
         SELECT COUNT(*) into alumnos_g1 FROM asignaturas_matricula WHERE grupo_id = var_grupo;
