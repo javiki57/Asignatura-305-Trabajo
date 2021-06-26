@@ -171,9 +171,17 @@ FOR EACH ROW
             ELSIF UPDATING THEN
 
             	if :NEW.GRUPO_ID IS NOT NULL THEN
-
-	            	SELECT grupo_id INTO grupoAux FROM GRUPO WHERE ID = :NEW.GRUPO_ID;
-	            	SELECT grupo_id INTO grupoAntiguo FROM GRUPO WHERE ID = :OLD.GRUPO_ID;
+                    SELECT grupo_id INTO grupoAux FROM GRUPO WHERE ID = :NEW.GRUPO_ID;
+                else
+                    grupoAux := null;
+                end if;
+	            	
+                if :OLD.GRUPO_ID IS NOT NULL THEN
+                    SELECT grupo_id INTO grupoAntiguo FROM GRUPO WHERE ID = :OLD.GRUPO_ID;
+                else
+                    grupoAntiguo := null;
+                end if;
+	            	
 
 	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS-1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 WHERE GRUPO_ID=:OLD.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
 	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
@@ -188,7 +196,7 @@ FOR EACH ROW
 	                   -- select grupo_id into grupoAux from GRUPO where GRUPO.id = :old.grupo_id;
 	                   -- UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
 	                end if;
-	            END IF;
+	            --END IF;
 
 	            if grupoAntiguo IS NOT NULL THEN
 
@@ -196,17 +204,19 @@ FOR EACH ROW
 	                SELECT TITULACION_CODIGO INTO titulacion FROM GRUPO WHERE ID = grupoAntiguo;
 	                SELECT REFERENCIA INTO asig_ref FROM ASIGNATURA WHERE TITULACION_CODIGO = titulacion AND NOMBRE = asig_nombre;
 
-	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where asignatura_referencia = asig_ref AND GRUPOS_POR_ASIGNATURA.grupo_id = grupoAux;
+	                UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL-1 where asignatura_referencia = asig_ref AND GRUPOS_POR_ASIGNATURA.grupo_id = grupoAntiguo;
 	            END IF;
 
-            END IF;
+           END IF;
+            
+            
         --else
           --  IF UPDATING THEN
             --    UPDATE GRUPOS_POR_ASIGNATURA SET NUM_ALUMNOS=NUM_ALUMNOS+1, NUM_ALUMNOS_REAL=NUM_ALUMNOS_REAL+1 WHERE GRUPO_ID=:NEW.GRUPO_ID and asignatura_referencia = :new.asignatura_referencia;
             --END IF;
         --end if;
 END ACTUALIZAR_ALUMNOS;
-/ 
+/
 
 --e
 create or replace package PK_ASIGNACION_GRUPOS as 
@@ -254,7 +264,7 @@ create or replace package body PK_ASIGNACION_GRUPOS as
     end PR_ASIGNA_ASIGNADOS;
     
     --g
-   procedure PR_ASIGNA_INGLES_NUEVO is
+  procedure PR_ASIGNA_INGLES_NUEVO is
         cursor alumnos_nuevos is select asig_ingles, expediente from nuevo_ingreso where asig_ingles is not null;
         var_letra varchar2(4);
         var_curso number;
@@ -267,6 +277,7 @@ create or replace package body PK_ASIGNACION_GRUPOS as
         asignatura varchar2(20);
         fallo exception;
         codigo_error number;
+        LETRA VARCHAR2(1);
     begin 
 
         for unalumno in alumnos_nuevos loop
@@ -274,15 +285,17 @@ create or replace package body PK_ASIGNACION_GRUPOS as
             contador := 1;
             SELECT id INTO grupoEspanol FROM GRUPO WHERE sustituye_ingles='si' AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1;
             update asignaturas_matricula AM set grupo_id=grupoEspanol where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA A WHERE AM.ASIGNATURA_REFERENCIA = A.REFERENCIA AND A.CURSO = 1 AND A.TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)));
-            
+
             --NO HAY NINGUN GRUPO EN LA LISTA DE LAS ASIGNATURAS DE INGLES ASI QUE NO PODEMOS LLAMAR A NORMALIZA_ASIGNATURAS
             normaliza_asignaturas(unalumno.asig_ingles, to_number(substr(unalumno.expediente,1,4)));
             for v_asignatura in (select * from temp_asignaturas) loop  
+           
                 SELECT id into grupoIngles FROM GRUPO WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CURSO = 1 AND LETRA = LETRA_GRUPO_INGLES(to_number(substr(unalumno.expediente,1,4)), v_asignatura.codigo);
+                
                 SELECT REFERENCIA into var_refer FROM ASIGNATURA WHERE TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND CODIGO = v_asignatura.codigo;
                 update asignaturas_matricula AM set grupo_id=grupoIngles where matricula_expedientes_nexp = unalumno.EXPEDIENTE AND ASIGNATURA_REFERENCIA IN (SELECT REFERENCIA FROM ASIGNATURA WHERE CURSO = 1 AND TITULACION_CODIGO = to_number(substr(unalumno.expediente,1,4)) AND codigo = v_asignatura.codigo);
             end loop;
-           
+
             if grupoIngles is null then raise fallo; end if; 
             exception
              when fallo then 
@@ -293,6 +306,8 @@ create or replace package body PK_ASIGNACION_GRUPOS as
             end;  
         end loop;
     end PR_ASIGNA_INGLES_NUEVO;
+
+
 
     --h
     procedure PR_ASIGNA_TARDE_NUEVO is
