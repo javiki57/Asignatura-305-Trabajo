@@ -1,0 +1,22 @@
+Mejoras del PL/SQL 1:
+-Reparamos el ejercicio 4 (Normaliza Asignaturas); anteriormente se nos quedaba atascado en un bucle infinito porque no llegaba a detectar las asignaturas
+que no tuviesen letra de grupo asignada. Reparado ese error, el procedimiento funciona perfectamente.
+
+Mejoras del PL/SQL 2:
+-Rehicimos por completo el apartado d) del trigger; No solo no funcionaba, si no que si hubiese funcionado no lo hubiese hecho como debería.
+Así que contemplamos que debía hacer en cada uno de los casos y lo fuimos probando hasta que comprobamos que funciona correctamente.
+
+-En el apartado e) pr_asigna_asignados teníamos un error de comprensión; Creíamos que si nos llegaban asignaturas sin grupo asignado, tendríamos
+que mandarlas todas a la tabla errores, pero eso era solo si algunas tenían grupo y otras no.
+
+-En el apartado f) letra_grupo_ingles teníamos un substring mal hecho y si no tenía letra el grupo de inglés, no devolvía null.
+
+-En el apartado g) pr_asigna_ingles_nuevo solo le cambiaba la asignatura a la primera de asigna_ingles de la tabla nuevo ingreso. Ahora funciona bien,
+utilizamos normaliza asignaturas para recorrer todas las asignaturas de la tabla anteriormente mencionada, y cogiendo la letra que devuelve la función
+del apartado f) le asignamos el grupo de inglés a esas asignaturas. Luego, le asignamos el grupo que sustituye inglés al resto de asignaturas en las que
+esté matriculado cada alumno. Además, implementamos el tratamiento de excepciones.
+
+-En el apartado h) pr_asigna_tarde_nuevo, cambiamos la comparación de un string de minusculas a mayusculas (que era el motivo del error), e implementamos
+el tratamiento de excepciones.
+
+-Hemos añadido los apartados i,j,k,l. 
